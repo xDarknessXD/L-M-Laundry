@@ -3,10 +3,12 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\Attributes\Layout;
 use App\Models\Service;
 use App\Models\Transaction;
 use App\Models\InventoryItem;
 
+#[Layout('layouts.app')]
 class TransactionCreate extends Component
 {
     // Customer
@@ -239,6 +241,7 @@ class TransactionCreate extends Component
             ->where('stock_quantity', '>', 0)
             ->get();
 
-        return view('livewire.transaction-create', compact('services', 'selectedService', 'inventoryItems'));
+        return view('livewire.transaction-create', compact('services', 'selectedService', 'inventoryItems'))
+            ->layout('layouts.app');
     }
 }

@@ -3,8 +3,10 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\Attributes\Layout;
 use App\Models\Transaction;
 
+#[Layout('layouts.app')]
 class TransactionEdit extends Component
 {
     public Transaction $transaction;
@@ -63,6 +65,7 @@ class TransactionEdit extends Component
 
     public function render()
     {
-        return view('livewire.transaction-edit');
+        return view('livewire.transaction-edit')
+            ->layout('layouts.app');
     }
 }

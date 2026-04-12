@@ -17,6 +17,7 @@
 <aside class="fixed left-0 top-0 h-full py-8 px-4 flex flex-col gap-2 w-72 border-none bg-surface-container-low z-50 font-sans tracking-tight antialiased">
     <!-- Brand -->
     <div class="mb-10 px-4">
+        <img src="{{ asset('images/logo.png') }}" alt="J&M Laundry Logo" class="h-10 w-auto mb-3 object-contain">
         <h1 class="text-xl font-black text-primary-container tracking-[-0.02em]">J&M Laundry</h1>
         <p class="text-xs uppercase tracking-widest text-on-surface-variant/60 font-bold">Management Suite</p>
     </div>

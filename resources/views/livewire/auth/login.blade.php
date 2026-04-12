@@ -1,9 +1,7 @@
 <div class="w-full max-w-[480px] flex flex-col items-center">
     <!-- Logo -->
-    <div class="mb-10 text-center">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-primary-container rounded-xl mb-4 shadow-sm">
-            <span class="material-symbols-outlined text-white text-3xl">local_laundry_service</span>
-        </div>
+    <div class="mb-10 text-center flex flex-col items-center">
+        <img src="{{ asset('images/logo.png') }}" alt="J&M Laundry Logo" class="w-24 h-auto mb-4 object-contain">
         <h1 class="text-2xl font-black text-primary tracking-[-0.02em]">J&M Laundry</h1>
         <p class="text-on-surface-variant font-medium tracking-tight mt-1">Management Suite</p>
     </div>

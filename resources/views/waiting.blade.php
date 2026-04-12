@@ -2,9 +2,7 @@
     <div class="max-w-xl w-full flex flex-col items-center text-center">
         <!-- Brand -->
         <div class="mb-12 flex flex-col items-center">
-            <div class="w-20 h-20 bg-primary-container rounded-xl flex items-center justify-center mb-4 shadow-[0_20px_40px_rgba(0,10,30,0.1)]">
-                <span class="material-symbols-outlined text-white text-4xl">local_laundry_service</span>
-            </div>
+            <img src="{{ asset('images/logo.png') }}" alt="J&M Laundry Logo" class="w-32 h-auto mb-4 object-contain">
             <h1 class="text-2xl font-black text-primary-container tracking-tight">J&M Laundry</h1>
             <p class="text-xs font-bold uppercase tracking-widest text-secondary mt-1">Management Suite</p>
         </div>
