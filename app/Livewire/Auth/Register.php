@@ -3,9 +3,11 @@
 namespace App\Livewire\Auth;
 
 use Livewire\Component;
+use Livewire\Attributes\Layout;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
+#[Layout('layouts.auth')]
 class Register extends Component
 {
     public string $name = '';
@@ -39,7 +41,6 @@ class Register extends Component
 
     public function render()
     {
-        return view('livewire.auth.register')
-            ->layout('layouts.auth', ['title' => 'Register | J&M Laundry Lounge']);
+        return view('livewire.auth.register');
     }
 }
