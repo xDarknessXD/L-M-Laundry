@@ -101,6 +101,20 @@ class TransactionCreate extends Component
         $item = InventoryItem::find($this->selectedAddonId);
         if (!$item) return;
 
+        // Check stock availability
+        $currentCartQuantity = 0;
+        foreach ($this->addons as $addon) {
+            if ($addon['item_id'] == $item->id) {
+                $currentCartQuantity = $addon['quantity'];
+                break;
+            }
+        }
+
+        if (($currentCartQuantity + $this->addonQty) > $item->stock_quantity) {
+            $this->addError('addonQty', "Only {$item->stock_quantity} left in stock.");
+            return;
+        }
+
         // Check if already added
         foreach ($this->addons as $key => $addon) {
             if ($addon['item_id'] == $item->id) {
@@ -191,13 +205,26 @@ class TransactionCreate extends Component
             'created_by' => auth()->id(),
         ]);
 
-        // Save addons
+        // Save addons and deduct inventory
         foreach ($this->addons as $addon) {
             $transaction->addons()->create([
                 'inventory_item_id' => $addon['item_id'],
                 'quantity' => $addon['quantity'],
                 'price' => $addon['price'],
             ]);
+
+            // Deduct stock
+            $item = InventoryItem::find($addon['item_id']);
+            if ($item) {
+                $item->stock_quantity -= $addon['quantity'];
+                
+                // Set status to out_of_stock if empty
+                if ($item->stock_quantity <= 0) {
+                    $item->stock_quantity = 0;
+                    $item->status = 'out_of_stock';
+                }
+                $item->save();
+            }
         }
 
         $this->dispatch('toast', message: "Transaction {$transaction->order_number} created!", type: 'success');
