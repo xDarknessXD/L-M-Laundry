@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>New Transaction | J&amp;M Laundry Lounge</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary": "#705d00",
+                    "surface-container-highest": "#e3e2e6",
+                    "on-secondary-container": "#406b56",
+                    "on-primary-container": "#708ab5",
+                    "on-secondary-fixed": "#002113",
+                    "inverse-primary": "#aec7f6",
+                    "tertiary-container": "#c9a900",
+                    "surface": "#faf9fd",
+                    "on-secondary": "#ffffff",
+                    "on-primary-fixed": "#001b3d",
+                    "on-primary-fixed-variant": "#2d476f",
+                    "tertiary-fixed-dim": "#e9c400",
+                    "error-container": "#ffdad6",
+                    "on-surface": "#1a1b1e",
+                    "surface-container": "#efedf1",
+                    "primary-fixed": "#d6e3ff",
+                    "surface-container-low": "#f4f3f7",
+                    "secondary-fixed": "#bdedd2",
+                    "tertiary-fixed": "#ffe16d",
+                    "primary-container": "#002147",
+                    "surface-bright": "#faf9fd",
+                    "on-background": "#1a1b1e",
+                    "background": "#faf9fd",
+                    "error": "#ba1a1a",
+                    "outline-variant": "#c4c6cf",
+                    "surface-container-high": "#e9e7eb",
+                    "primary-fixed-dim": "#aec7f6",
+                    "on-tertiary-fixed": "#221b00",
+                    "outline": "#74777f",
+                    "surface-tint": "#465f88",
+                    "on-surface-variant": "#44474e",
+                    "on-error-container": "#93000a",
+                    "on-tertiary-container": "#4c3f00",
+                    "on-tertiary-fixed-variant": "#544600",
+                    "surface-variant": "#e3e2e6",
+                    "inverse-surface": "#2f3033",
+                    "secondary-fixed-dim": "#a2d1b7",
+                    "on-primary": "#ffffff",
+                    "secondary-container": "#bbeacf",
+                    "primary": "#000a1e",
+                    "inverse-on-surface": "#f1f0f4",
+                    "secondary": "#3b6751",
+                    "on-tertiary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "surface-dim": "#dad9dd",
+                    "on-secondary-fixed-variant": "#234f3b",
+                    "surface-container-lowest": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e3e2e6;
+            border-radius: 10px;
+        }
+        .receipt-jagged {
+            position: relative;
+        }
+        .receipt-jagged::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: radial-gradient(circle, transparent, transparent 50%, #ffffff 50%, #ffffff) 0% 0% / 16px 16px repeat-x;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- Sidebar -->
+<aside class="fixed left-0 top-0 h-full py-8 px-4 flex flex-col gap-2 w-72 border-none bg-surface-container-low dark:bg-slate-900 z-50">
+<div class="mb-10 px-4">
+<h1 class="text-xl font-black text-primary dark:text-white tracking-tight">J&amp;M Laundry</h1>
+<p class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60">Management Suite</p>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-full group" href="#">
+<span class="material-symbols-outlined transition-transform group-hover:scale-110">dashboard</span>
+<span class="font-semibold text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-primary font-bold bg-surface-container-lowest rounded-full shadow-sm" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+<span class="font-bold text-sm">New Transaction</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-full group" href="#">
+<span class="material-symbols-outlined transition-transform group-hover:scale-110">receipt_long</span>
+<span class="font-semibold text-sm">Transactions</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-full group" href="#">
+<span class="material-symbols-outlined transition-transform group-hover:scale-110">inventory_2</span>
+<span class="font-semibold text-sm">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-full group" href="#">
+<span class="material-symbols-outlined transition-transform group-hover:scale-110">local_laundry_service</span>
+<span class="font-semibold text-sm">Machine Logs</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-full group" href="#">
+<span class="material-symbols-outlined transition-transform group-hover:scale-110">group</span>
+<span class="font-semibold text-sm">User Management</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-full group" href="#">
+<span class="material-symbols-outlined transition-transform group-hover:scale-110">settings</span>
+<span class="font-semibold text-sm">Settings</span>
+</a>
+</nav>
+<div class="mt-auto flex flex-col gap-1 border-t border-outline-variant/10 pt-6">
+<a class="flex items-center gap-3 px-6 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-full group" href="#">
+<span class="material-symbols-outlined transition-transform group-hover:scale-110">account_circle</span>
+<span class="font-semibold text-sm">Profile</span>
+</a>
+<button class="w-full mt-2 py-3 px-4 bg-primary text-white rounded-full font-bold text-sm hover:brightness-110 transition-all shadow-md active:scale-[0.98]">
+                Logout
+            </button>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-72 min-h-screen p-8 flex flex-col gap-8">
+<!-- Top Nav Bar -->
+<header class="w-full h-20 sticky top-0 z-40 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl flex justify-between items-center px-10 shadow-[0_2px_20px_rgba(0,0,0,0.02)] rounded-3xl">
+<div class="flex items-center gap-8">
+<span class="text-xl font-black text-primary tracking-tight">J&amp;M Laundry Lounge</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-bold text-sm border-b-2 border-transparent hover:border-primary pb-1" href="#">Dashboard</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-bold text-sm border-b-2 border-transparent hover:border-primary pb-1" href="#">Inventory</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex gap-2">
+<button class="p-2.5 rounded-full hover:bg-surface-container-highest transition-colors active:scale-90">
+<span class="material-symbols-outlined text-on-surface-variant">help</span>
+</button>
+<button class="p-2.5 rounded-full hover:bg-surface-container-highest transition-colors active:scale-90 relative">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<span class="absolute top-2.5 right-2.5 w-2 h-2 bg-error rounded-full ring-2 ring-white"></span>
+</button>
+</div>
+<div class="flex items-center gap-3 pl-4 border-l border-outline-variant/30">
+<div class="text-right hidden sm:block">
+<p class="text-xs font-black text-primary">Admin User</p>
+<p class="text-[10px] text-on-surface-variant">Manager</p>
+</div>
+<div class="w-10 h-10 bg-primary-fixed rounded-full flex items-center justify-center text-on-primary-fixed font-black text-xs shadow-sm ring-2 ring-primary-fixed-dim/20">
+                        JD
+                    </div>
+</div>
+</div>
+</header>
+<!-- Transaction Content Area -->
+<div class="flex flex-1 gap-10">
+<!-- Left Side: Order Builder -->
+<section class="flex-[1.6] flex flex-col gap-8 pb-10">
+<!-- Customer Selection -->
+<div class="bg-surface-container-lowest rounded-3xl p-8 shadow-sm ring-1 ring-outline-variant/10">
+<div class="flex justify-between items-end mb-8">
+<div>
+<span class="text-[10px] uppercase tracking-widest text-secondary font-black mb-1 block">Client Information</span>
+<h2 class="text-3xl font-black text-primary tracking-tighter">Customer Selection</h2>
+</div>
+<button class="flex items-center gap-2 bg-tertiary-container text-on-tertiary-container px-6 py-3 rounded-full font-black text-sm shadow-md hover:brightness-95 transition-all active:scale-95">
+<span class="material-symbols-outlined">person_add</span>
+                            New Customer
+                        </button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest ml-1">Search Existing</label>
+<div class="flex items-center bg-surface-container-low rounded-2xl px-5 py-4 focus-within:ring-2 ring-primary focus-within:bg-white transition-all shadow-inner">
+<span class="material-symbols-outlined text-outline mr-3">search</span>
+<input class="bg-transparent border-none focus:ring-0 w-full text-sm font-medium placeholder:text-outline" placeholder="Name or Phone Number..." type="text"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest ml-1">Quick Note</label>
+<div class="flex items-center bg-surface-container-low rounded-2xl px-5 py-4 focus-within:ring-2 ring-primary focus-within:bg-white transition-all shadow-inner">
+<input class="bg-transparent border-none focus:ring-0 w-full text-sm font-medium placeholder:text-outline" placeholder="Specific handling instructions..." type="text"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Service Selection -->
+<div class="bg-surface-container-lowest rounded-3xl p-8 shadow-sm ring-1 ring-outline-variant/10">
+<div class="mb-8">
+<span class="text-[10px] uppercase tracking-widest text-secondary font-black mb-1 block">Step 01</span>
+<h2 class="text-3xl font-black text-primary tracking-tighter">Select Service Type</h2>
+</div>
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Service Card -->
+<div class="group cursor-pointer bg-surface-container-low hover:bg-white hover:ring-2 hover:ring-primary transition-all p-5 rounded-3xl relative overflow-hidden flex flex-col min-h-[220px]">
+<div class="absolute -right-2 -top-2 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined text-7xl" style="font-variation-settings: 'FILL' 1;">local_laundry_service</span>
+</div>
+<div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-6 group-hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-primary group-hover:text-white">local_laundry_service</span>
+</div>
+<h3 class="font-black text-lg text-primary leading-tight mb-1">Regular Wash</h3>
+<p class="text-[11px] font-medium text-on-surface-variant leading-normal mb-auto pr-4">Wash, Dry &amp; Fold Service</p>
+<div class="mt-4 pt-4 border-t border-outline-variant/10">
+<span class="text-primary text-xl font-black">₱180</span>
+<span class="text-[10px] font-bold text-on-surface-variant/60 ml-1">/ kilo</span>
+</div>
+</div>
+<!-- Service Card - Active -->
+<div class="group cursor-pointer bg-primary p-5 rounded-3xl relative overflow-hidden flex flex-col min-h-[220px] shadow-xl shadow-primary/20 ring-4 ring-primary-fixed-dim/30">
+<div class="absolute -right-2 -top-2 opacity-10">
+<span class="material-symbols-outlined text-7xl" style="font-variation-settings: 'FILL' 1;">bolt</span>
+</div>
+<div class="absolute top-4 right-4 bg-tertiary-container text-on-tertiary-container text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Active</div>
+<div class="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">bolt</span>
+</div>
+<h3 class="font-black text-lg text-white leading-tight mb-1">Rush Order</h3>
+<p class="text-[11px] font-medium text-white/70 leading-normal mb-auto pr-4">Ready in 4 Hours Express</p>
+<div class="mt-4 pt-4 border-t border-white/10">
+<span class="text-tertiary-fixed text-xl font-black">₱250</span>
+<span class="text-[10px] font-bold text-white/50 ml-1">/ kilo</span>
+</div>
+</div>
+<!-- Service Card -->
+<div class="group cursor-pointer bg-surface-container-low hover:bg-white hover:ring-2 hover:ring-primary transition-all p-5 rounded-3xl relative overflow-hidden flex flex-col min-h-[220px]">
+<div class="absolute -right-2 -top-2 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined text-7xl" style="font-variation-settings: 'FILL' 1;">person_pin</span>
+</div>
+<div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-6 group-hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-primary group-hover:text-white">person_pin</span>
+</div>
+<h3 class="font-black text-lg text-primary leading-tight mb-1">Self-Service</h3>
+<p class="text-[11px] font-medium text-on-surface-variant leading-normal mb-auto pr-4">Machine Rental for DIY Laundry</p>
+<div class="mt-4 pt-4 border-t border-outline-variant/10">
+<span class="text-primary text-xl font-black">₱80</span>
+<span class="text-[10px] font-bold text-on-surface-variant/60 ml-1">/ cycle</span>
+</div>
+</div>
+<!-- Service Card -->
+<div class="group cursor-pointer bg-surface-container-low hover:bg-white hover:ring-2 hover:ring-primary transition-all p-5 rounded-3xl relative overflow-hidden flex flex-col min-h-[220px]">
+<div class="absolute -right-2 -top-2 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined text-7xl" style="font-variation-settings: 'FILL' 1;">bed</span>
+</div>
+<div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-6 group-hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-primary group-hover:text-white">bed</span>
+</div>
+<h3 class="font-black text-lg text-primary leading-tight mb-1">Comforter</h3>
+<p class="text-[11px] font-medium text-on-surface-variant leading-normal mb-auto pr-4">Premium Deep Clean for Large Items</p>
+<div class="mt-4 pt-4 border-t border-outline-variant/10">
+<span class="text-primary text-xl font-black">₱350</span>
+<span class="text-[10px] font-bold text-on-surface-variant/60 ml-1">/ piece</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Weight & Items -->
+<div class="bg-surface-container-lowest rounded-3xl p-8 shadow-sm ring-1 ring-outline-variant/10">
+<div class="mb-8 flex flex-wrap justify-between items-center gap-4">
+<div>
+<span class="text-[10px] uppercase tracking-widest text-secondary font-black mb-1 block">Step 02</span>
+<h2 class="text-3xl font-black text-primary tracking-tighter">Load Specification</h2>
+</div>
+<div class="flex items-center gap-3 px-6 py-3 bg-tertiary-fixed rounded-full shadow-sm">
+<span class="material-symbols-outlined text-on-tertiary-fixed font-black">scale</span>
+<span class="text-xs font-black text-on-tertiary-fixed uppercase">Live Scale: <span class="text-tertiary text-sm">0.00kg</span></span>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<div class="space-y-4">
+<label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest ml-1">Weight Entry (Kilograms)</label>
+<div class="flex flex-col sm:flex-row items-stretch gap-4">
+<div class="relative w-full sm:w-48">
+<input class="text-5xl font-black text-primary w-full bg-surface-container-high border-none rounded-3xl px-6 py-8 focus:ring-4 ring-primary/20 focus:bg-white text-center shadow-inner" type="number" value="8.5"/>
+<span class="absolute right-4 bottom-4 text-[10px] font-black text-primary/40 uppercase tracking-tighter">KG</span>
+</div>
+<div class="flex-1 grid grid-cols-3 gap-2">
+<button class="bg-white hover:bg-primary hover:text-white transition-all font-black text-sm rounded-2xl shadow-sm border border-outline-variant/20 active:scale-95">+1.0</button>
+<button class="bg-white hover:bg-primary hover:text-white transition-all font-black text-sm rounded-2xl shadow-sm border border-outline-variant/20 active:scale-95">+0.5</button>
+<button class="bg-error text-white hover:brightness-110 transition-all font-black text-sm rounded-2xl shadow-sm active:scale-95">CLR</button>
+</div>
+</div>
+</div>
+<div class="space-y-4">
+<label class="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest ml-1">Machine Assignment</label>
+<div class="grid grid-cols-2 gap-4 h-[120px]">
+<div class="p-5 bg-secondary-container rounded-3xl border-2 border-secondary shadow-md relative group cursor-pointer flex flex-col justify-center">
+<div class="text-[9px] font-black text-secondary uppercase tracking-widest mb-1">Washer</div>
+<div class="text-base font-black text-on-secondary-container">#04 - Lg Drum</div>
+<span class="material-symbols-outlined absolute top-4 right-4 text-secondary text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="p-5 bg-surface-container-low rounded-3xl border-2 border-dashed border-outline-variant/40 flex flex-col items-center justify-center group cursor-pointer hover:border-primary hover:bg-white transition-all">
+<div class="text-[9px] font-black text-outline-variant uppercase tracking-widest mb-1 group-hover:text-primary">Dryer</div>
+<div class="text-sm font-bold text-outline-variant group-hover:text-primary">Assign Now</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Inventory Add-ons -->
+<div class="bg-surface-container-lowest rounded-3xl p-8 shadow-sm ring-1 ring-outline-variant/10">
+<div class="mb-8">
+<span class="text-[10px] uppercase tracking-widest text-secondary font-black mb-1 block">Step 03</span>
+<h2 class="text-3xl font-black text-primary tracking-tighter">Supplies &amp; Add-ons</h2>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="p-5 bg-surface-container-low rounded-3xl flex flex-col justify-between group hover:bg-white hover:ring-2 hover:ring-primary transition-all cursor-pointer min-h-[120px]">
+<div class="flex justify-between items-start">
+<h4 class="text-xs font-black text-primary leading-tight pr-2">Detergent Cup</h4>
+<span class="material-symbols-outlined text-outline group-hover:text-primary text-xl">add_circle</span>
+</div>
+<p class="text-xs font-black text-tertiary">₱15.00</p>
+</div>
+<div class="p-5 bg-white rounded-3xl flex flex-col justify-between ring-2 ring-primary shadow-lg shadow-primary/5 transition-all cursor-pointer min-h-[120px]">
+<div class="flex justify-between items-start">
+<h4 class="text-xs font-black text-primary leading-tight pr-2">Fabric Softener</h4>
+<span class="material-symbols-outlined text-primary text-xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="flex justify-between items-end">
+<p class="text-xs font-black text-tertiary">₱20.00 <span class="text-[9px] text-on-surface-variant font-medium">x 2</span></p>
+</div>
+</div>
+<div class="p-5 bg-surface-container-low rounded-3xl flex flex-col justify-between group hover:bg-white hover:ring-2 hover:ring-primary transition-all cursor-pointer min-h-[120px]">
+<div class="flex justify-between items-start">
+<h4 class="text-xs font-black text-primary leading-tight pr-2">Bleach Extra</h4>
+<span class="material-symbols-outlined text-outline group-hover:text-primary text-xl">add_circle</span>
+</div>
+<p class="text-xs font-black text-tertiary">₱10.00</p>
+</div>
+<div class="p-5 bg-surface-container-low rounded-3xl flex flex-col justify-between group hover:bg-white hover:ring-2 hover:ring-primary transition-all cursor-pointer min-h-[120px]">
+<div class="flex justify-between items-start">
+<h4 class="text-xs font-black text-primary leading-tight pr-2">Laundry Bag</h4>
+<span class="material-symbols-outlined text-outline group-hover:text-primary text-xl">add_circle</span>
+</div>
+<p class="text-xs font-black text-tertiary">₱120.00</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Side: Order Summary -->
+<aside class="flex-1 sticky top-32 h-[calc(100vh-160px)] flex flex-col">
+<div class="bg-white rounded-3xl p-8 shadow-2xl flex-1 flex flex-col relative overflow-hidden receipt-jagged border border-outline-variant/10">
+<!-- Subtle brand watermark -->
+<div class="absolute -right-20 -top-20 opacity-[0.03] rotate-12">
+<span class="material-symbols-outlined text-[20rem]">local_laundry_service</span>
+</div>
+<div class="border-b border-dashed border-outline-variant/30 pb-8 mb-8 relative z-10">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h3 class="text-2xl font-black text-primary tracking-tighter">Order Summary</h3>
+<p class="text-[10px] text-on-surface-variant/40 font-black uppercase tracking-widest mt-1">ID: #L-240502-001</p>
+</div>
+<div class="bg-primary text-white p-3 rounded-2xl shadow-lg">
+<span class="material-symbols-outlined text-2xl">qr_code_2</span>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-surface-container-low p-4 rounded-2xl ring-1 ring-outline-variant/10">
+<div class="w-12 h-12 rounded-full bg-secondary-fixed flex items-center justify-center shadow-inner">
+<span class="material-symbols-outlined text-on-secondary-fixed">person</span>
+</div>
+<div>
+<p class="text-sm font-black text-primary">Michael Scott</p>
+<p class="text-[10px] font-bold text-on-surface-variant/60">+63 917 123 4567</p>
+</div>
+</div>
+</div>
+<div class="flex-1 flex flex-col gap-5 overflow-y-auto custom-scrollbar relative z-10 pr-2">
+<!-- Receipt Items -->
+<div class="flex justify-between items-start group">
+<div class="flex-1">
+<h4 class="text-sm font-black text-primary group-hover:text-secondary transition-colors">Rush Order Service</h4>
+<p class="text-[10px] font-bold text-on-surface-variant/50 uppercase tracking-tighter">8.5 kg @ ₱250.00/kg</p>
+</div>
+<span class="text-sm font-black text-primary ml-4">₱2,125.00</span>
+</div>
+<div class="flex justify-between items-start group">
+<div class="flex-1">
+<h4 class="text-sm font-black text-primary">Fabric Softener <span class="text-[10px] text-on-surface-variant font-medium">(x2)</span></h4>
+<p class="text-[10px] font-bold text-on-surface-variant/50 uppercase tracking-tighter">Downy Premium Scent</p>
+</div>
+<span class="text-sm font-black text-primary ml-4">₱40.00</span>
+</div>
+<div class="flex justify-between items-start group">
+<div class="flex-1">
+<h4 class="text-sm font-black text-primary">Anti-Bacterial Treatment</h4>
+<p class="text-[10px] font-bold text-on-surface-variant/50 uppercase tracking-tighter">Deep Hygiene Add-on</p>
+</div>
+<span class="text-sm font-black text-primary ml-4">₱50.00</span>
+</div>
+<!-- Divider -->
+<div class="h-px w-full bg-outline-variant/10 my-2"></div>
+<div class="flex justify-between items-start">
+<div>
+<h4 class="text-sm font-black text-secondary">Voucher Applied</h4>
+<p class="text-[10px] font-black text-secondary/60 uppercase tracking-widest">"CLEAN30" - 30% Off</p>
+</div>
+<span class="text-sm font-black text-secondary tracking-tight">-₱637.50</span>
+</div>
+</div>
+<!-- Payment Panel -->
+<div class="mt-8 pt-8 border-t-2 border-surface-container-high relative z-10">
+<div class="space-y-3 mb-8">
+<div class="flex justify-between items-center text-on-surface-variant/60">
+<span class="text-xs font-bold uppercase tracking-widest">Subtotal</span>
+<span class="text-sm font-black">₱1,577.50</span>
+</div>
+<div class="flex justify-between items-center text-on-surface-variant/60">
+<span class="text-xs font-bold uppercase tracking-widest">Tax (12% VAT)</span>
+<span class="text-sm font-black">₱189.30</span>
+</div>
+<div class="flex justify-between items-center pt-4 border-t border-outline-variant/10">
+<span class="text-xl font-black text-primary tracking-tighter">Total Amount</span>
+<span class="text-4xl font-black text-tertiary tracking-tighter">₱1,766.80</span>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<div class="grid grid-cols-3 gap-3">
+<button class="py-3 bg-white rounded-2xl text-[10px] font-black uppercase text-primary border-2 border-primary shadow-sm hover:bg-primary hover:text-white transition-all">Cash</button>
+<button class="py-3 bg-surface-container-low rounded-2xl text-[10px] font-black uppercase text-on-surface-variant hover:bg-surface-container-high transition-all">G-Cash</button>
+<button class="py-3 bg-surface-container-low rounded-2xl text-[10px] font-black uppercase text-on-surface-variant hover:bg-surface-container-high transition-all">Card</button>
+</div>
+<button class="w-full py-6 bg-primary text-white rounded-full font-black tracking-widest text-sm shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all uppercase">
+                                Place Order &amp; Print
+                            </button>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</main>
+</body></html>

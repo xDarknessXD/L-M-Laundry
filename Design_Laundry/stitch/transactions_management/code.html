@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>J&amp;M Laundry Lounge - Transactions Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#705d00",
+                        "surface-container-highest": "#e3e2e6",
+                        "on-secondary-container": "#406b56",
+                        "on-primary-container": "#708ab5",
+                        "on-secondary-fixed": "#002113",
+                        "inverse-primary": "#aec7f6",
+                        "tertiary-container": "#c9a900",
+                        "surface": "#faf9fd",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#001b3d",
+                        "on-primary-fixed-variant": "#2d476f",
+                        "tertiary-fixed-dim": "#e9c400",
+                        "error-container": "#ffdad6",
+                        "on-surface": "#1a1b1e",
+                        "surface-container": "#efedf1",
+                        "primary-fixed": "#d6e3ff",
+                        "surface-container-low": "#f4f3f7",
+                        "secondary-fixed": "#bdedd2",
+                        "tertiary-fixed": "#ffe16d",
+                        "primary-container": "#002147",
+                        "surface-bright": "#faf9fd",
+                        "on-background": "#1a1b1e",
+                        "background": "#faf9fd",
+                        "error": "#ba1a1a",
+                        "outline-variant": "#c4c6cf",
+                        "surface-container-high": "#e9e7eb",
+                        "primary-fixed-dim": "#aec7f6",
+                        "on-tertiary-fixed": "#221b00",
+                        "outline": "#74777f",
+                        "surface-tint": "#465f88",
+                        "on-surface-variant": "#44474e",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-container": "#4c3f00",
+                        "on-tertiary-fixed-variant": "#544600",
+                        "surface-variant": "#e3e2e6",
+                        "inverse-surface": "#2f3033",
+                        "secondary-fixed-dim": "#a2d1b7",
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#bbeacf",
+                        "primary": "#000a1e",
+                        "inverse-on-surface": "#f1f0f4",
+                        "secondary": "#3b6751",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#dad9dd",
+                        "on-secondary-fixed-variant": "#234f3b",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e3e2e6; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #c4c6cf; }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased overflow-x-hidden">
+<!-- Sidebar Shell -->
+<aside class="fixed left-0 top-0 h-full py-8 px-4 flex flex-col gap-2 h-screen w-72 flex flex-col border-none bg-[#f4f3f7] dark:bg-slate-900 font-['Inter'] tracking-tight antialiased z-50">
+<div class="mb-8 px-4">
+<h1 class="text-xl font-black text-[#002147] dark:text-white tracking-[-0.02em]">J&amp;M Laundry</h1>
+<p class="text-xs font-semibold text-on-surface-variant tracking-wider uppercase opacity-70">Management Suite</p>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-[#44474e] dark:text-slate-400 hover:text-[#002147] dark:hover:text-white hover:bg-[#e3e2e6] dark:hover:bg-slate-800 transition-all duration-200 rounded-full" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-semibold text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#44474e] dark:text-slate-400 hover:text-[#002147] dark:hover:text-white hover:bg-[#e3e2e6] dark:hover:bg-slate-800 transition-all duration-200 rounded-full" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-semibold text-sm">New Transaction</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#002147] dark:text-white font-bold bg-[#ffffff] dark:bg-slate-800 rounded-full shadow-sm" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-semibold text-sm">Transactions</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#44474e] dark:text-slate-400 hover:text-[#002147] dark:hover:text-white hover:bg-[#e3e2e6] dark:hover:bg-slate-800 transition-all duration-200 rounded-full" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-semibold text-sm">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#44474e] dark:text-slate-400 hover:text-[#002147] dark:hover:text-white hover:bg-[#e3e2e6] dark:hover:bg-slate-800 transition-all duration-200 rounded-full" href="#">
+<span class="material-symbols-outlined">local_laundry_service</span>
+<span class="font-semibold text-sm">Machine Logs</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#44474e] dark:text-slate-400 hover:text-[#002147] dark:hover:text-white hover:bg-[#e3e2e6] dark:hover:bg-slate-800 transition-all duration-200 rounded-full" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-semibold text-sm">User Management</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#44474e] dark:text-slate-400 hover:text-[#002147] dark:hover:text-white hover:bg-[#e3e2e6] dark:hover:bg-slate-800 transition-all duration-200 rounded-full" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-semibold text-sm">Settings</span>
+</a>
+</nav>
+<div class="mt-auto flex flex-col gap-1 border-t border-outline-variant/10 pt-4">
+<a class="flex items-center gap-3 px-4 py-3 text-[#44474e] dark:text-slate-400 hover:text-[#002147] dark:hover:text-white hover:bg-[#e3e2e6] dark:hover:bg-slate-800 transition-all duration-200 rounded-full" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-semibold text-sm">Profile</span>
+</a>
+<button class="mt-2 flex items-center justify-center gap-2 w-full py-3 bg-primary text-on-primary rounded-full font-bold transition-transform scale-95 active:scale-90">
+<span class="material-symbols-outlined text-sm">logout</span>
+                Logout
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="pl-72 min-h-screen flex flex-col">
+<!-- Top Navigation Bar -->
+<header class="w-full h-16 sticky top-0 z-40 bg-[#ffffff]/80 dark:bg-slate-950/80 backdrop-blur-xl shadow-[0_40px_40px_rgba(0,10,30,0.04)] flex justify-between items-center px-8">
+<div class="flex items-center gap-8">
+<span class="text-lg font-bold text-[#002147] dark:text-white">J&amp;M Laundry Lounge</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-[#44474e] dark:text-slate-400 font-semibold text-sm hover:text-[#002147] transition-colors" href="#">Dashboard</a>
+<a class="text-[#002147] dark:text-white border-b-2 border-[#002147] font-semibold text-sm" href="#">Transactions</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<button class="p-2 text-[#44474e] hover:text-[#002147] transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+<button class="p-2 text-[#44474e] hover:text-[#002147] transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+</div>
+<div class="h-8 w-[1px] bg-outline-variant/30 mx-2"></div>
+<div class="flex items-center gap-3 cursor-pointer active:opacity-70">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-[10px] font-bold text-white">JD</div>
+<span class="font-semibold text-sm text-[#002147]">Admin</span>
+</div>
+</div>
+</header>
+<!-- Transaction Content -->
+<div class="p-8 max-w-7xl mx-auto w-full">
+<div class="flex flex-col md:flex-row justify-between items-end gap-6 mb-10">
+<div>
+<h2 class="text-3xl font-extrabold text-primary tracking-tight mb-1">Transactions Ledger</h2>
+<p class="text-on-surface-variant font-medium">Manage and review all customer laundry orders.</p>
+</div>
+<!-- Bento Filter Bar -->
+<div class="bg-surface-container-low p-2 rounded-xl flex flex-wrap items-center gap-2 shadow-sm border border-outline-variant/10">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="pl-9 pr-4 py-2 bg-surface-container-lowest rounded-lg border-none text-sm w-48 focus:ring-2 focus:ring-primary-fixed" placeholder="Search orders..." type="text"/>
+</div>
+<select class="bg-surface-container-lowest border-none text-sm py-2 px-3 pr-8 rounded-lg focus:ring-2 focus:ring-primary-fixed">
+<option>All Services</option>
+<option>Wash &amp; Fold</option>
+<option>Dry Cleaning</option>
+<option>Iron Only</option>
+</select>
+<select class="bg-surface-container-lowest border-none text-sm py-2 px-3 pr-8 rounded-lg focus:ring-2 focus:ring-primary-fixed">
+<option>All Status</option>
+<option>Paid</option>
+<option>Pending</option>
+<option>Unpaid</option>
+</select>
+<input class="bg-surface-container-lowest border-none text-sm py-2 px-3 rounded-lg focus:ring-2 focus:ring-primary-fixed" type="date"/>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">filter_alt</span>
+                        Filter
+                    </button>
+</div>
+</div>
+<!-- Transactions Table Container -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full border-separate border-spacing-y-1 px-6 pb-6">
+<thead>
+<tr class="text-left">
+<th class="py-6 px-4 text-[10px] font-black uppercase tracking-[0.1em] text-on-surface-variant">Order #</th>
+<th class="py-6 px-4 text-[10px] font-black uppercase tracking-[0.1em] text-on-surface-variant">Customer</th>
+<th class="py-6 px-4 text-[10px] font-black uppercase tracking-[0.1em] text-on-surface-variant">Service</th>
+<th class="py-6 px-4 text-[10px] font-black uppercase tracking-[0.1em] text-on-surface-variant text-center">Kilos</th>
+<th class="py-6 px-4 text-[10px] font-black uppercase tracking-[0.1em] text-on-surface-variant text-right">Total</th>
+<th class="py-6 px-4 text-[10px] font-black uppercase tracking-[0.1em] text-on-surface-variant text-right">Paid</th>
+<th class="py-6 px-4 text-[10px] font-black uppercase tracking-[0.1em] text-on-surface-variant text-right">Balance</th>
+<th class="py-6 px-4 text-[10px] font-black uppercase tracking-[0.1em] text-on-surface-variant text-center">Status</th>
+<th class="py-6 px-4 text-[10px] font-black uppercase tracking-[0.1em] text-on-surface-variant">Date</th>
+<th class="py-6 px-4 text-[10px] font-black uppercase tracking-[0.1em] text-on-surface-variant text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="text-sm font-medium">
+<!-- Row 1 -->
+<tr class="group hover:bg-surface-container-highest transition-colors">
+<td class="py-4 px-4 rounded-l-lg bg-surface-container-low group-hover:bg-transparent">#JM-9402</td>
+<td class="py-4 px-4 bg-surface-container-low group-hover:bg-transparent">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full object-cover" data-alt="professional headshot of a middle-aged man with short hair in a bright modern laundry shop setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOSz9FbUt9Rs4nV8Hpp86gl2_WYvakT-doLGyUnGl4vTomlngCntEmC8mQdG3kIzw9bsVxc849itEgC7xZRYwHUPSh50EHZWlqyEWhd37aCoxa6ek5UMJtrTMXR9ebBJy9PHJE5yMtW_N_-n5vJB4V6xXLq_F02kgCeTMGfcKrI27BzjR0YRPa9dftzHSuV3WN3928sJjVdWDXBywHxLrtVAcXxAZMU8HelgkIElDL_jTL2pLVXHkAsQVFgzGJOl8ComUKDghI5VvR"/>
+<span>Ricardo Dalisay</span>
+</div>
+</td>
+<td class="py-4 px-4 bg-surface-container-low group-hover:bg-transparent">
+<span class="text-xs py-1 px-3 bg-secondary-fixed text-on-secondary-fixed-variant rounded-full">Wash &amp; Fold</span>
+</td>
+<td class="py-4 px-4 text-center bg-surface-container-low group-hover:bg-transparent font-bold">12.5</td>
+<td class="py-4 px-4 text-right bg-surface-container-low group-hover:bg-transparent text-tertiary font-bold">₱625.00</td>
+<td class="py-4 px-4 text-right bg-surface-container-low group-hover:bg-transparent">₱625.00</td>
+<td class="py-4 px-4 text-right bg-surface-container-low group-hover:bg-transparent text-on-surface-variant">₱0.00</td>
+<td class="py-4 px-4 text-center bg-surface-container-low group-hover:bg-transparent">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-secondary-container text-on-secondary-container">Paid</span>
+</td>
+<td class="py-4 px-4 bg-surface-container-low group-hover:bg-transparent text-xs text-on-surface-variant">Oct 24, 2023</td>
+<td class="py-4 px-4 rounded-r-lg bg-surface-container-low group-hover:bg-transparent text-right">
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group hover:bg-surface-container-highest transition-colors">
+<td class="py-4 px-4 rounded-l-lg bg-surface-container-low group-hover:bg-transparent">#JM-9403</td>
+<td class="py-4 px-4 bg-surface-container-low group-hover:bg-transparent">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full object-cover" data-alt="professional headshot of a smiling woman with glasses in a professional environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADOFlwBN_ud2lMx7WLUXMxApnLVtIf5K21n4TGC-JMtzAd8-02uzGP-Rr6KrU9_sJnC3TYld6TfipOjZ1MKSylwYazUzO32aQ3UCT8zS0eUZOFmAs5PiQbmxfqTNnUlgpmNhAqa1F5V5jpvE8CnTtqih_whjiu_gyyt_nay7jEf9VOOR-xQCuY2JD6UIDjU-gojuS5bci1o807nIuPG9D4kHfrQERFHGQwKqnfOMUM4rY8PS1St2POAgIAPjmySd5Jp8CumsE9HLct"/>
+<span>Elena De Rossi</span>
+</div>
+</td>
+<td class="py-4 px-4 bg-surface-container-low group-hover:bg-transparent">
+<span class="text-xs py-1 px-3 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-full">Dry Cleaning</span>
+</td>
+<td class="py-4 px-4 text-center bg-surface-container-low group-hover:bg-transparent font-bold">4.2</td>
+<td class="py-4 px-4 text-right bg-surface-container-low group-hover:bg-transparent text-tertiary font-bold">₱1,240.00</td>
+<td class="py-4 px-4 text-right bg-surface-container-low group-hover:bg-transparent">₱500.00</td>
+<td class="py-4 px-4 text-right bg-surface-container-low group-hover:bg-transparent text-error font-bold">₱740.00</td>
+<td class="py-4 px-4 text-center bg-surface-container-low group-hover:bg-transparent">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-tertiary-fixed text-on-tertiary-fixed">Pending</span>
+</td>
+<td class="py-4 px-4 bg-surface-container-low group-hover:bg-transparent text-xs text-on-surface-variant">Oct 24, 2023</td>
+<td class="py-4 px-4 rounded-r-lg bg-surface-container-low group-hover:bg-transparent text-right">
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="group hover:bg-surface-container-highest transition-colors">
+<td class="py-4 px-4 rounded-l-lg bg-surface-container-low group-hover:bg-transparent">#JM-9404</td>
+<td class="py-4 px-4 bg-surface-container-low group-hover:bg-transparent">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-[10px] font-bold text-on-primary-fixed">MG</div>
+<span>Mark Gonzales</span>
+</div>
+</td>
+<td class="py-4 px-4 bg-surface-container-low group-hover:bg-transparent">
+<span class="text-xs py-1 px-3 bg-secondary-fixed text-on-secondary-fixed-variant rounded-full">Wash &amp; Fold</span>
+</td>
+<td class="py-4 px-4 text-center bg-surface-container-low group-hover:bg-transparent font-bold">8.0</td>
+<td class="py-4 px-4 text-right bg-surface-container-low group-hover:bg-transparent text-tertiary font-bold">₱400.00</td>
+<td class="py-4 px-4 text-right bg-surface-container-low group-hover:bg-transparent">₱0.00</td>
+<td class="py-4 px-4 text-right bg-surface-container-low group-hover:bg-transparent text-error font-bold">₱400.00</td>
+<td class="py-4 px-4 text-center bg-surface-container-low group-hover:bg-transparent">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-error-container text-on-error-container">Unpaid</span>
+</td>
+<td class="py-4 px-4 bg-surface-container-low group-hover:bg-transparent text-xs text-on-surface-variant">Oct 23, 2023</td>
+<td class="py-4 px-4 rounded-r-lg bg-surface-container-low group-hover:bg-transparent text-right">
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="group hover:bg-surface-container-highest transition-colors">
+<td class="py-4 px-4 rounded-l-lg bg-surface-container-low group-hover:bg-transparent">#JM-9405</td>
+<td class="py-4 px-4 bg-surface-container-low group-hover:bg-transparent">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full object-cover" data-alt="close up headshot portrait of a stylish woman with auburn hair in soft natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtc3rcvCPkICFccOiejvRrNXc3TjltWGQB5O5BVl6bHV6YhQhXvLoYDjt1pmNi46mbic6txirn5ngSsA0kGQlOHtjLmyE25nme5N0I5WHtahBgam0xUoOIOyytETmVIH5_9bgbyMGRpwD74DnWLPjUBsDf7VIH-x9G6ZaEYimAk9TvDRFijc1BuqkgzKOc6J_qApiOKVsdb03oezQINFfaLFgQ9TO05SZgzxa5zqkkTJfH53clcUO5ZqB2IE0JnB279vvV1Gy3IAyl"/>
+<span>Sofia Vergara</span>
+</div>
+</td>
+<td class="py-4 px-4 bg-surface-container-low group-hover:bg-transparent">
+<span class="text-xs py-1 px-3 bg-primary-fixed text-on-primary-fixed-variant rounded-full">Ironing Only</span>
+</td>
+<td class="py-4 px-4 text-center bg-surface-container-low group-hover:bg-transparent font-bold">15.0</td>
+<td class="py-4 px-4 text-right bg-surface-container-low group-hover:bg-transparent text-tertiary font-bold">₱450.00</td>
+<td class="py-4 px-4 text-right bg-surface-container-low group-hover:bg-transparent">₱450.00</td>
+<td class="py-4 px-4 text-right bg-surface-container-low group-hover:bg-transparent text-on-surface-variant">₱0.00</td>
+<td class="py-4 px-4 text-center bg-surface-container-low group-hover:bg-transparent">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-secondary-container text-on-secondary-container">Paid</span>
+</td>
+<td class="py-4 px-4 bg-surface-container-low group-hover:bg-transparent text-xs text-on-surface-variant">Oct 23, 2023</td>
+<td class="py-4 px-4 rounded-r-lg bg-surface-container-low group-hover:bg-transparent text-right">
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="group hover:bg-surface-container-highest transition-colors">
+<td class="py-4 px-4 rounded-l-lg bg-surface-container-low group-hover:bg-transparent">#JM-9406</td>
+<td class="py-4 px-4 bg-surface-container-low group-hover:bg-transparent">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed flex items-center justify-center text-[10px] font-bold text-on-secondary-fixed">TP</div>
+<span>Thomas Pagel</span>
+</div>
+</td>
+<td class="py-4 px-4 bg-surface-container-low group-hover:bg-transparent">
+<span class="text-xs py-1 px-3 bg-secondary-fixed text-on-secondary-fixed-variant rounded-full">Wash &amp; Fold</span>
+</td>
+<td class="py-4 px-4 text-center bg-surface-container-low group-hover:bg-transparent font-bold">5.5</td>
+<td class="py-4 px-4 text-right bg-surface-container-low group-hover:bg-transparent text-tertiary font-bold">₱275.00</td>
+<td class="py-4 px-4 text-right bg-surface-container-low group-hover:bg-transparent">₱275.00</td>
+<td class="py-4 px-4 text-right bg-surface-container-low group-hover:bg-transparent text-on-surface-variant">₱0.00</td>
+<td class="py-4 px-4 text-center bg-surface-container-low group-hover:bg-transparent">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-secondary-container text-on-secondary-container">Paid</span>
+</td>
+<td class="py-4 px-4 bg-surface-container-low group-hover:bg-transparent text-xs text-on-surface-variant">Oct 22, 2023</td>
+<td class="py-4 px-4 rounded-r-lg bg-surface-container-low group-hover:bg-transparent text-right">
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="p-6 border-t border-outline-variant/10 flex items-center justify-between">
+<span class="text-xs text-on-surface-variant font-medium">Showing 1 to 5 of 124 transactions</span>
+<div class="flex gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-on-primary text-xs font-bold">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors text-xs font-bold">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors text-xs font-bold">3</button>
+<span class="flex items-end px-2 text-xs text-on-surface-variant">...</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors text-xs font-bold">25</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Dashboard Style Metrics Summary Below Table -->
+<div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10 flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</div>
+<div>
+<p class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant opacity-60">Total Daily Collection</p>
+<h4 class="text-xl font-extrabold text-primary">₱12,450.00</h4>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10 flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed">
+<span class="material-symbols-outlined">pending_actions</span>
+</div>
+<div>
+<p class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant opacity-60">Outstanding Balance</p>
+<h4 class="text-xl font-extrabold text-primary">₱3,210.00</h4>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10 flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed">
+<span class="material-symbols-outlined">monitoring</span>
+</div>
+<div>
+<p class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant opacity-60">Transaction Volume</p>
+<h4 class="text-xl font-extrabold text-primary">48 Orders</h4>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Info -->
+<footer class="mt-auto p-8 text-center text-on-surface-variant text-xs opacity-50 font-medium">
+            © 2023 J&amp;M Laundry Lounge Management Suite • V2.4.0
+        </footer>
+</main>
+</body></html>

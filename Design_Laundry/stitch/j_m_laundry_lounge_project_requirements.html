@@ -1,0 +1,36 @@
+# J&M Laundry Lounge - Internal Management System PRD
+
+## Overview
+A complete web-based laundry management system designed for desktop/tablet use by Admin and Staff.
+
+## Design Language
+- **Primary Colors:** Deep navy or forest green.
+- **Background:** White.
+- **Accent:** Soft gold/yellow for CTAs and highlights.
+- **Typography:** Inter or Poppins (Sans-serif).
+- **Style:** Rounded cards, consistent button styles, color-coded status badges.
+- **Currency:** ₱ (Philippine Peso).
+- **Icons:** Laundry-themed (washing machine, bubbles, etc.).
+- **Layout:** Fixed left sidebar + top navbar + main content area.
+
+## Role-Based Access
+### Admin / Owner
+- Full access to all features.
+- Manage pricing, inventory, users, and settings.
+- Create new transactions.
+### Staff
+- Process existing transactions, accept payments.
+- Read-only inventory.
+- Restricted access to settings, user management, and pricing.
+
+## Page List
+1. **Sign-In:** Minimal centered card.
+2. **Sign-Up (Admin Only):** Account creation form.
+3. **Waiting for Approval:** Pending state screen.
+4. **Dashboard:** Summary cards and recent transactions (role-specific).
+5. **New Transaction (Admin Only):** Complex multi-step order builder with receipt preview.
+6. **Transactions:** Filterable table of all orders.
+7. **Inventory:** Category-based item management (Admin: CRUD, Staff: Read-only).
+8. **Machine Logs:** Automated and manual cycle tracking.
+9. **User Management (Admin Only):** Staff account control.
+10. **Settings (Admin Only):** Business info and global pricing defaults.

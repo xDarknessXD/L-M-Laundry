@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Inventory Management | J&amp;M Laundry Lounge</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary": "#705d00",
+                      "surface-container-highest": "#e3e2e6",
+                      "on-secondary-container": "#406b56",
+                      "on-primary-container": "#708ab5",
+                      "on-secondary-fixed": "#002113",
+                      "inverse-primary": "#aec7f6",
+                      "tertiary-container": "#c9a900",
+                      "surface": "#faf9fd",
+                      "on-secondary": "#ffffff",
+                      "on-primary-fixed": "#001b3d",
+                      "on-primary-fixed-variant": "#2d476f",
+                      "tertiary-fixed-dim": "#e9c400",
+                      "error-container": "#ffdad6",
+                      "on-surface": "#1a1b1e",
+                      "surface-container": "#efedf1",
+                      "primary-fixed": "#d6e3ff",
+                      "surface-container-low": "#f4f3f7",
+                      "secondary-fixed": "#bdedd2",
+                      "tertiary-fixed": "#ffe16d",
+                      "primary-container": "#002147",
+                      "surface-bright": "#faf9fd",
+                      "on-background": "#1a1b1e",
+                      "background": "#faf9fd",
+                      "error": "#ba1a1a",
+                      "outline-variant": "#c4c6cf",
+                      "surface-container-high": "#e9e7eb",
+                      "primary-fixed-dim": "#aec7f6",
+                      "on-tertiary-fixed": "#221b00",
+                      "outline": "#74777f",
+                      "surface-tint": "#465f88",
+                      "on-surface-variant": "#44474e",
+                      "on-error-container": "#93000a",
+                      "on-tertiary-container": "#4c3f00",
+                      "on-tertiary-fixed-variant": "#544600",
+                      "surface-variant": "#e3e2e6",
+                      "inverse-surface": "#2f3033",
+                      "secondary-fixed-dim": "#a2d1b7",
+                      "on-primary": "#ffffff",
+                      "secondary-container": "#bbeacf",
+                      "primary": "#000a1e",
+                      "inverse-on-surface": "#f1f0f4",
+                      "secondary": "#3b6751",
+                      "on-tertiary": "#ffffff",
+                      "on-error": "#ffffff",
+                      "surface-dim": "#dad9dd",
+                      "on-secondary-fixed-variant": "#234f3b",
+                      "surface-container-lowest": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "fontFamily": {
+                      "headline": ["Inter"],
+                      "body": ["Inter"],
+                      "label": ["Inter"]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; }
+      </style>
+</head>
+<body class="bg-surface text-on-surface antialiased">
+<!-- Shell Layout -->
+<div class="flex min-h-screen">
+<!-- SideNavBar (Shared Component) -->
+<aside class="fixed left-0 top-0 h-full py-8 px-4 flex flex-col gap-2 h-screen w-72 border-none bg-[#f4f3f7] dark:bg-slate-900 font-['Inter'] tracking-tight antialiased z-50">
+<div class="mb-10 px-4">
+<h1 class="text-xl font-black text-[#002147] dark:text-white tracking-[-0.02em]">J&amp;M Laundry</h1>
+<p class="text-xs font-medium text-on-surface-variant opacity-60">Management Suite</p>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 py-3 px-4 text-[#44474e] dark:text-slate-400 hover:text-[#002147] dark:hover:text-white hover:bg-[#e3e2e6] dark:hover:bg-slate-800 transition-all duration-200 scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-sm font-semibold">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 py-3 px-4 text-[#44474e] dark:text-slate-400 hover:text-[#002147] dark:hover:text-white hover:bg-[#e3e2e6] dark:hover:bg-slate-800 transition-all duration-200 scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+<span class="text-sm font-semibold">New Transaction</span>
+</a>
+<a class="flex items-center gap-3 py-3 px-4 text-[#44474e] dark:text-slate-400 hover:text-[#002147] dark:hover:text-white hover:bg-[#e3e2e6] dark:hover:bg-slate-800 transition-all duration-200 scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="text-sm font-semibold">Transactions</span>
+</a>
+<a class="flex items-center gap-3 py-3 px-4 text-[#002147] dark:text-white font-bold bg-[#ffffff] dark:bg-slate-800 rounded-full shadow-sm scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="text-sm font-semibold">Inventory</span>
+</a>
+<a class="flex items-center gap-3 py-3 px-4 text-[#44474e] dark:text-slate-400 hover:text-[#002147] dark:hover:text-white hover:bg-[#e3e2e6] dark:hover:bg-slate-800 transition-all duration-200 scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="local_laundry_service">local_laundry_service</span>
+<span class="text-sm font-semibold">Machine Logs</span>
+</a>
+<a class="flex items-center gap-3 py-3 px-4 text-[#44474e] dark:text-slate-400 hover:text-[#002147] dark:hover:text-white hover:bg-[#e3e2e6] dark:hover:bg-slate-800 transition-all duration-200 scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="text-sm font-semibold">User Management</span>
+</a>
+<a class="flex items-center gap-3 py-3 px-4 text-[#44474e] dark:text-slate-400 hover:text-[#002147] dark:hover:text-white hover:bg-[#e3e2e6] dark:hover:bg-slate-800 transition-all duration-200 scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-sm font-semibold">Settings</span>
+</a>
+</nav>
+<div class="mt-auto flex flex-col gap-1 border-t border-outline-variant/10 pt-4">
+<a class="flex items-center gap-3 py-3 px-4 text-[#44474e] dark:text-slate-400 hover:text-[#002147] dark:hover:text-white hover:bg-[#e3e2e6] dark:hover:bg-slate-800 transition-all duration-200 scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+<span class="text-sm font-semibold">Profile</span>
+</a>
+<button class="mt-4 w-full py-3 bg-primary text-on-primary rounded-full font-bold text-sm tracking-wide transition-all active:scale-95">
+                    Logout
+                </button>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-72 flex-1 p-8">
+<!-- TopAppBar (Customized Implementation) -->
+<header class="flex justify-between items-center mb-12 sticky top-0 z-40 bg-surface/80 backdrop-blur-xl py-4">
+<div>
+<h2 class="text-3xl font-extrabold text-primary tracking-tight">Inventory</h2>
+<p class="text-on-surface-variant font-medium">Stock management &amp; supply tracking</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/50">search</span>
+<input class="bg-surface-container-highest border-none rounded-full pl-10 pr-6 py-2.5 text-sm w-64 focus:ring-2 focus:ring-primary-fixed transition-all" placeholder="Search supplies..." type="text"/>
+</div>
+<button class="flex items-center gap-2 px-6 py-2.5 bg-surface-container-highest text-primary font-bold rounded-full text-sm hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                        + Add Category
+                    </button>
+<button class="flex items-center gap-2 px-6 py-2.5 bg-tertiary-container text-on-tertiary-container font-bold rounded-full text-sm hover:opacity-90 transition-opacity shadow-sm">
+<span class="material-symbols-outlined text-[18px]">post_add</span>
+                        + Add Item
+                    </button>
+</div>
+</header>
+<!-- Stats Overview - Bento Grid Style -->
+<div class="grid grid-cols-12 gap-6 mb-12">
+<!-- Total Value Card -->
+<div class="col-span-12 md:col-span-4 bg-primary-container text-on-primary rounded-xl p-8 flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute -right-10 -top-10 w-40 h-40 bg-white/5 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
+<div>
+<p class="text-on-primary-container font-bold tracking-widest text-[10px] uppercase mb-1">+0.05em tracking"&gt;Total Inventory Value</p>
+<h3 class="text-5xl font-black tracking-tighter">₱ 142,850.00</h3>
+</div>
+<div class="mt-6 flex items-center gap-2 text-xs font-semibold text-on-primary-container">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+12.5% from last month</span>
+</div>
+</div>
+<!-- Stock Health Card -->
+<div class="col-span-12 md:col-span-4 bg-surface-container-lowest rounded-xl p-8 flex flex-col justify-center border-none shadow-[0_40px_40px_rgba(0,10,30,0.02)]">
+<div class="flex items-center justify-between mb-4">
+<p class="text-secondary font-bold tracking-widest text-[10px] uppercase">Stock Health</p>
+<span class="material-symbols-outlined text-secondary opacity-40">bubble_chart</span>
+</div>
+<div class="flex items-end gap-1">
+<div class="h-12 w-3 bg-secondary rounded-full"></div>
+<div class="h-16 w-3 bg-secondary rounded-full"></div>
+<div class="h-8 w-3 bg-secondary/30 rounded-full"></div>
+<div class="h-14 w-3 bg-secondary rounded-full"></div>
+<div class="h-10 w-3 bg-secondary rounded-full"></div>
+<div class="ml-4">
+<span class="text-3xl font-black text-on-surface">94%</span>
+<p class="text-xs text-on-surface-variant font-medium">Items available</p>
+</div>
+</div>
+</div>
+<!-- Quick Actions Card -->
+<div class="col-span-12 md:col-span-4 bg-surface-container-low rounded-xl p-8 border-none">
+<p class="text-on-surface-variant font-bold tracking-widest text-[10px] uppercase mb-4">Urgent Tasks</p>
+<div class="space-y-3">
+<div class="flex items-center justify-between bg-surface-container-lowest p-3 rounded-lg">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-error" data-weight="fill">warning</span>
+<span class="text-sm font-semibold">8 Items Low Stock</span>
+</div>
+<button class="text-primary text-xs font-bold hover:underline">Reorder</button>
+</div>
+<div class="flex items-center justify-between bg-surface-container-lowest p-3 rounded-lg">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-tertiary">history</span>
+<span class="text-sm font-semibold">Monthly audit due</span>
+</div>
+<button class="text-primary text-xs font-bold hover:underline">Start</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Category Section -->
+<div class="space-y-8">
+<!-- Category 1: Fabric Care -->
+<section>
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined">waves</span>
+</div>
+<div>
+<h4 class="text-xl font-bold text-primary">Fabric Care</h4>
+<p class="text-sm text-on-surface-variant">Detergents, Softeners, and Stain Removers</p>
+</div>
+</div>
+<button class="text-primary text-sm font-bold hover:opacity-70 transition-opacity">Edit Category</button>
+</div>
+<div class="grid grid-cols-1 gap-1">
+<!-- Table Row Header -->
+<div class="grid grid-cols-12 px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60">
+<div class="col-span-4">Product Details</div>
+<div class="col-span-2 text-center">Status</div>
+<div class="col-span-3 text-center">Stock Quantity</div>
+<div class="col-span-2 text-right">Unit Price</div>
+<div class="col-span-1"></div>
+</div>
+<!-- Item Row 1 -->
+<div class="grid grid-cols-12 items-center bg-surface-container-lowest hover:bg-surface-container-highest transition-colors px-6 py-5 rounded-lg mb-1 group">
+<div class="col-span-4 flex items-center gap-4">
+<div class="w-14 h-14 rounded-xl overflow-hidden bg-surface-container-high shrink-0">
+<img alt="Liquid Detergent" class="w-full h-full object-cover" data-alt="close-up of a premium laundry liquid detergent bottle with minimalist clean label against a soft white background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1iGvrCkyxKMBprEm5w5HBYXkSo0whXinzlXIeggIlRxTrGS7N5p7AXN7Pp7VU9oRFuzGot5u1PlJ8uituw-bkMMv2NTG8qUw6lV6lS0Qegy0n_sBsC_k7sioOHJh-9K0-EvJknZhLasDKUtqajYbyfhHfg0YboETBzmEDiNIaX4QGepUhMZKhK6-XPC9YN78ZFAzTZKp9RoSDUEY9hhNWxf3cME8r2E__Nw6ir5BE6LO8RWKDovOftaBafZ0wLqvT-BDfNrIZea-y"/>
+</div>
+<div>
+<h5 class="text-sm font-bold text-on-surface">Premium Liquid Detergent</h5>
+<p class="text-xs text-on-surface-variant font-medium">SKU: JM-FC-001 • 5L Container</p>
+</div>
+</div>
+<div class="col-span-2 flex justify-center">
+<span class="px-4 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-secondary-container text-on-secondary-fixed-variant">Available</span>
+</div>
+<div class="col-span-3 flex items-center justify-center gap-4">
+<button class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<span class="text-lg font-black text-primary w-8 text-center">42</span>
+<button class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+<div class="col-span-2 text-right">
+<span class="text-tertiary font-bold tracking-tight">₱ 850.00</span>
+</div>
+<div class="col-span-1 flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-primary-fixed rounded-full transition-colors">
+<span class="material-symbols-outlined text-primary text-xl">edit_note</span>
+</button>
+</div>
+</div>
+<!-- Item Row 2 -->
+<div class="grid grid-cols-12 items-center bg-surface-container-lowest hover:bg-surface-container-highest transition-colors px-6 py-5 rounded-lg mb-1 group">
+<div class="col-span-4 flex items-center gap-4">
+<div class="w-14 h-14 rounded-xl overflow-hidden bg-surface-container-high shrink-0">
+<img alt="Fabric Softener" class="w-full h-full object-cover" data-alt="professional grade fabric softener in a transparent container showing soft blue liquid with aesthetic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBb_mKWzxh2zosg2BD6FfHs227W5tUQbQ-EqdZM2xK6dx5ZNDLr7ePaPCw9tJpgJEKax-IE7GuxJWUkVb-cmJidMROTvjXwGOwrZ439_nxSuD4R1gZl-L4piBA-yBboSDu85uiSLyPk227XexN7TU_iN9nGSJu3WEY7vZfiEgIgzGhuTf0t9zcj44HjbtIZOvf4CsPLMH0PINXHTRkdeYZwKJNjz-Uxz5113bmde01XoksHs97Wp74rE9TBnIV_Ii9zcXmVH78UVdVB"/>
+</div>
+<div>
+<h5 class="text-sm font-bold text-on-surface">Ultra-Soft Conditioner</h5>
+<p class="text-xs text-on-surface-variant font-medium">SKU: JM-FC-002 • 3.5L Bottle</p>
+</div>
+</div>
+<div class="col-span-2 flex justify-center">
+<span class="px-4 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-error-container text-on-error-container">Low Stock</span>
+</div>
+<div class="col-span-3 flex items-center justify-center gap-4">
+<button class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<span class="text-lg font-black text-error w-8 text-center">5</span>
+<button class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+<div class="col-span-2 text-right">
+<span class="text-tertiary font-bold tracking-tight">₱ 420.00</span>
+</div>
+<div class="col-span-1 flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-primary-fixed rounded-full transition-colors">
+<span class="material-symbols-outlined text-primary text-xl">edit_note</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Category 2: Necessities -->
+<section>
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-tertiary-container flex items-center justify-center text-on-tertiary-container">
+<span class="material-symbols-outlined">inventory</span>
+</div>
+<div>
+<h4 class="text-xl font-bold text-primary">Necessities</h4>
+<p class="text-sm text-on-surface-variant">Hangers, Laundry Bags, and Disposable Liners</p>
+</div>
+</div>
+<button class="text-primary text-sm font-bold hover:opacity-70 transition-opacity">Edit Category</button>
+</div>
+<div class="grid grid-cols-1 gap-1">
+<!-- Table Row Header -->
+<div class="grid grid-cols-12 px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60">
+<div class="col-span-4">Product Details</div>
+<div class="col-span-2 text-center">Status</div>
+<div class="col-span-3 text-center">Stock Quantity</div>
+<div class="col-span-2 text-right">Unit Price</div>
+<div class="col-span-1"></div>
+</div>
+<!-- Item Row 3 -->
+<div class="grid grid-cols-12 items-center bg-surface-container-lowest hover:bg-surface-container-highest transition-colors px-6 py-5 rounded-lg mb-1 group">
+<div class="col-span-4 flex items-center gap-4">
+<div class="w-14 h-14 rounded-xl overflow-hidden bg-surface-container-high shrink-0">
+<img alt="Hangers" class="w-full h-full object-cover" data-alt="stack of minimalist white wooden laundry hangers in a high-end closet setting with soft side lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADrFVdCeCdiPMs_VMhTzWmuCntuW8GIWfPOuycTLc0uAWsTvGnibV4VQWjC86U0ioDjIWGvHfsvuoz7Dh8WjW9sMNXKcgvEg16rGbCd-iO6tolhj8tD4gYe5LZLvfa4S6hCydALwnwgDC9vjPDXh7-BRv-TRhE-TqTJjwebOvdu7xY5pjlkCyAbZrJDdqCYsCLNEC_b3Dquszv7p8ul_RqjacEXWWDQE9LH0D04u0TPcFz3XnAHVspo4JK1x_e6P-0aTyAmPoCIyhP"/>
+</div>
+<div>
+<h5 class="text-sm font-bold text-on-surface">Luxury Wood Hangers</h5>
+<p class="text-xs text-on-surface-variant font-medium">SKU: JM-NC-082 • Bulk Box (50pcs)</p>
+</div>
+</div>
+<div class="col-span-2 flex justify-center">
+<span class="px-4 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-secondary-container text-on-secondary-fixed-variant">Available</span>
+</div>
+<div class="col-span-3 flex items-center justify-center gap-4">
+<button class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<span class="text-lg font-black text-primary w-8 text-center">120</span>
+<button class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+<div class="col-span-2 text-right">
+<span class="text-tertiary font-bold tracking-tight">₱ 1,250.00</span>
+</div>
+<div class="col-span-1 flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-primary-fixed rounded-full transition-colors">
+<span class="material-symbols-outlined text-primary text-xl">edit_note</span>
+</button>
+</div>
+</div>
+<!-- Item Row 4 -->
+<div class="grid grid-cols-12 items-center bg-surface-container-lowest hover:bg-surface-container-highest transition-colors px-6 py-5 rounded-lg mb-1 group">
+<div class="col-span-4 flex items-center gap-4">
+<div class="w-14 h-14 rounded-xl overflow-hidden bg-surface-container-high shrink-0">
+<img alt="Laundry Bags" class="w-full h-full object-cover" data-alt="reusable organic cotton mesh laundry bags folded neatly on a textured linen surface with warm morning sunlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBawMYc4ZnbAWuNjbusfEMyNC22QrVm_xxnWmbcGo5Oq2D6XAkBxvahdusSWJIWZyj3qKBsldvsq45-kNrar7UkgzuXQMNr1tr_9Lnyqa1DMlc9r-d_YO7HdHzEGOZm-DfFSAKLT00T9iraZoye1A64DR4OM5N1o6vUhO8aak4QsxXM7OvgnFiCIdo_7VwBxhWfNL--gWom1plMCaXfrUm3ExrNwjA0WSR-L_lFg-R_WvF5Y0W2YgSedNltounY3d5wD8tPcYOIyu-c"/>
+</div>
+<div>
+<h5 class="text-sm font-bold text-on-surface">Eco-Mesh Wash Bags</h5>
+<p class="text-xs text-on-surface-variant font-medium">SKU: JM-NC-044 • Set of 3</p>
+</div>
+</div>
+<div class="col-span-2 flex justify-center">
+<span class="px-4 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-tertiary-fixed text-on-tertiary-fixed">Pending Order</span>
+</div>
+<div class="col-span-3 flex items-center justify-center gap-4">
+<button class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<span class="text-lg font-black text-primary w-8 text-center">15</span>
+<button class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+<div class="col-span-2 text-right">
+<span class="text-tertiary font-bold tracking-tight">₱ 350.00</span>
+</div>
+<div class="col-span-1 flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-primary-fixed rounded-full transition-colors">
+<span class="material-symbols-outlined text-primary text-xl">edit_note</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Floating Action Corner (Subtle UI enhancement) -->
+<div class="fixed bottom-10 right-10 flex flex-col gap-4">
+<div class="group relative">
+<span class="absolute right-full mr-4 top-1/2 -translate-y-1/2 px-3 py-1 bg-primary text-on-primary text-[10px] font-bold uppercase rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Print Stock Sheet</span>
+<button class="w-14 h-14 bg-surface-container-lowest shadow-xl rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-on-primary transition-all active:scale-90">
+<span class="material-symbols-outlined">print</span>
+</button>
+</div>
+<div class="group relative">
+<span class="absolute right-full mr-4 top-1/2 -translate-y-1/2 px-3 py-1 bg-primary text-on-primary text-[10px] font-bold uppercase rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Export to PDF</span>
+<button class="w-14 h-14 bg-surface-container-lowest shadow-xl rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-on-primary transition-all active:scale-90">
+<span class="material-symbols-outlined">ios_share</span>
+</button>
+</div>
+</div>
+</main>
+</div>
+</body></html>
