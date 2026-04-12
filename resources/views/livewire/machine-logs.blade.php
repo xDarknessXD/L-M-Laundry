@@ -1,4 +1,4 @@
-<div class="p-8 max-w-7xl mx-auto space-y-6">
+<div class="p-8 max-w-7xl mx-auto space-y-6" wire:poll.5s>
     <!-- Header -->
     <div class="flex justify-between items-end">
         <div>
@@ -75,7 +75,18 @@
                         </span>
                     </td>
                     <td class="px-6 py-4 text-center text-sm font-medium">{{ number_format($log->load_kilos, 1) }} kg</td>
-                    <td class="px-6 py-4 text-center text-sm font-medium">{{ $log->duration_minutes }} min</td>
+                    <td class="px-6 py-4 text-center text-sm font-medium">
+                        @if($log->status === 'in_progress')
+                            @php
+                                $remaining = $log->remaining_time;
+                                $minutes = floor($remaining / 60);
+                                $seconds = $remaining % 60;
+                            @endphp
+                            <span class="text-primary font-bold">{{ $minutes }} min {{ $seconds }} sec</span>
+                        @else
+                            Done
+                        @endif
+                    </td>
                     <td class="px-6 py-4 text-sm text-on-surface">{{ $log->staff?->name ?? 'N/A' }}</td>
                     <td class="px-6 py-4 text-center">
                         @if($log->status === 'in_progress')

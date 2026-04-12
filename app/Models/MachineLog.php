@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class MachineLog extends Model
@@ -25,5 +26,19 @@ class MachineLog extends Model
     public function staff()
     {
         return $this->belongsTo(User::class, 'staff_id');
+    }
+
+    public function getRemainingTimeAttribute()
+    {
+        if (! $this->end_time || $this->status === 'completed') {
+            return null;
+        }
+        $now = Carbon::now();
+        $end = Carbon::parse($this->end_time);
+        if ($end->isPast()) {
+            return 0;
+        }
+
+        return $now->diffInSeconds($end);
     }
 }

@@ -9,12 +9,13 @@
         ['name' => 'Transactions', 'route' => 'transactions', 'icon' => 'receipt_long'],
         ['name' => 'Inventory', 'route' => 'inventory', 'icon' => 'inventory_2'],
         ['name' => 'Machine Logs', 'route' => 'machine-logs', 'icon' => 'local_laundry_service'],
+        ['name' => 'Daily Report', 'route' => 'daily-report', 'icon' => 'analytics', 'admin' => true],
         ['name' => 'User Management', 'route' => 'users', 'icon' => 'group', 'admin' => true],
         ['name' => 'Settings', 'route' => 'settings', 'icon' => 'settings', 'admin' => true],
     ];
 @endphp
 
-<aside class="fixed left-0 top-0 h-full py-8 px-4 flex flex-col gap-2 w-72 border-none bg-surface-container-low z-50 font-sans tracking-tight antialiased">
+<aside x-persist="sidebar" class="fixed left-0 top-0 h-full py-8 px-4 flex flex-col gap-2 w-72 border-none bg-surface-container-low z-50 font-sans tracking-tight antialiased">
     <!-- Brand -->
     <div class="mb-10 px-4">
         <img src="{{ asset('images/logo.png') }}" alt="J&M Laundry Logo" class="h-10 w-auto mb-3 object-contain">
@@ -56,7 +57,7 @@
              x-transition:leave="transition ease-in duration-200"
              x-transition:leave-start="opacity-100 backdrop-blur-sm"
              x-transition:leave-end="opacity-0 backdrop-blur-none">
-            
+
             <div @click.away="confirmLogout = false" class="bg-white rounded-2xl p-6 shadow-2xl max-w-sm w-full"
                  x-transition:enter="transition ease-out duration-300"
                  x-transition:enter-start="opacity-0 scale-95 translate-y-4"
@@ -64,7 +65,7 @@
                  x-transition:leave="transition ease-in duration-200"
                  x-transition:leave-start="opacity-100 scale-100 translate-y-0"
                  x-transition:leave-end="opacity-0 scale-95 translate-y-4">
-                
+
                 <div class="flex items-center gap-4 mb-4">
                     <div class="w-12 h-12 rounded-full bg-error-container flex items-center justify-center text-error flex-shrink-0">
                         <span class="material-symbols-outlined text-2xl">logout</span>

@@ -1,16 +1,17 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
+use App\Livewire\DailyReport;
 use App\Livewire\Dashboard;
+use App\Livewire\Inventory;
+use App\Livewire\MachineLogs;
+use App\Livewire\Settings;
 use App\Livewire\TransactionCreate;
 use App\Livewire\TransactionEdit;
 use App\Livewire\Transactions;
-use App\Livewire\Inventory;
-use App\Livewire\MachineLogs;
 use App\Livewire\UserManagement;
-use App\Livewire\Settings;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +31,7 @@ Route::post('/logout', function () {
     auth()->logout();
     request()->session()->invalidate();
     request()->session()->regenerateToken();
+
     return redirect('/login');
 })->name('logout')->middleware('auth');
 
@@ -58,5 +60,6 @@ Route::middleware(['auth', 'check.status'])->group(function () {
     Route::middleware('admin')->group(function () {
         Route::get('/users', UserManagement::class)->name('users');
         Route::get('/settings', Settings::class)->name('settings');
+        Route::get('/daily-report', DailyReport::class)->name('daily-report');
     });
 });
