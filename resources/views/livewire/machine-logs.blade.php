@@ -5,12 +5,13 @@
             <h2 class="text-3xl font-black tracking-tight text-primary">Machine Logs</h2>
             <p class="text-on-surface-variant font-medium mt-1">Track washer and dryer cycles</p>
         </div>
-        @if($activeTab === 'machines')
+        @if($activeTab === 'machines' && $isAdmin)
         <button wire:click="openAddMachine"
                 class="flex items-center gap-2 px-8 py-3 editorial-gradient text-white font-bold rounded-full shadow-lg shadow-primary/20 hover:scale-105 transition-all active:scale-95">
             <span class="material-symbols-outlined">add_circle</span> Add Machine
         </button>
-        @else
+        @endif
+        @if($activeTab !== 'machines')
         <button wire:click="$set('showLogModal', true)"
                 class="flex items-center gap-2 px-8 py-3 editorial-gradient text-white font-bold rounded-full shadow-lg shadow-primary/20 hover:scale-105 transition-all active:scale-95">
             <span class="material-symbols-outlined">play_circle</span> Start Cycle
@@ -189,6 +190,7 @@
                     </td>
                     <td class="px-6 py-4">
                         <div class="flex items-center justify-end gap-2">
+                            @if($isAdmin)
                             <button wire:click="toggleMachine({{ $machine->id }})" wire:confirm="{{ $machine->is_active ? 'Deactivate' : 'Activate' }} this machine?"
                                     class="text-on-surface-variant hover:text-primary transition-colors p-1" title="{{ $machine->is_active ? 'Deactivate' : 'Activate' }}">
                                 <span class="material-symbols-outlined text-xl">{{ $machine->is_active ? 'pause_circle' : 'play_circle' }}</span>
@@ -201,6 +203,9 @@
                                     class="text-on-surface-variant hover:text-error transition-colors p-1" title="Delete">
                                 <span class="material-symbols-outlined text-xl">delete</span>
                             </button>
+                            @else
+                            <span class="px-3 py-1 bg-surface-container-high text-on-surface-variant text-[10px] font-bold rounded-full">View Only</span>
+                            @endif
                         </div>
                     </td>
                 </tr>
@@ -209,7 +214,9 @@
                     <td colspan="5" class="text-center py-16 text-on-surface-variant">
                         <span class="material-symbols-outlined text-5xl mb-3 opacity-20">precision_manufacturing</span>
                         <p class="text-sm font-medium">No machines found</p>
+                        @if($isAdmin)
                         <button wire:click="openAddMachine" class="mt-4 text-primary text-sm font-bold hover:underline">Add your first machine</button>
+                        @endif
                     </td>
                 </tr>
                 @endforelse
