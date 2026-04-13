@@ -21,6 +21,9 @@ class MachineLogs extends Component
 
     public string $filterMachine = '';
 
+    // Tabs
+    public string $activeTab = 'logs';
+
     // New log form
     public bool $showLogModal = false;
 
@@ -31,6 +34,83 @@ class MachineLogs extends Component
     public float $loadKilos = 0;
 
     public int $durationMinutes = 30;
+
+    // Machine form
+    public bool $showMachineModal = false;
+
+    public bool $editingMachine = false;
+
+    public ?int $editMachineId = null;
+
+    public string $machineCode = '';
+
+    public string $machineName = '';
+
+    public string $machineType = 'washer';
+
+    // Machine Management
+    public function openAddMachine()
+    {
+        $this->editingMachine = false;
+        $this->editMachineId = null;
+        $this->resetMachineForm();
+        $this->showMachineModal = true;
+    }
+
+    public function openEditMachine($id)
+    {
+        $machine = Machine::find($id);
+        $this->editingMachine = true;
+        $this->editMachineId = $id;
+        $this->machineCode = $machine->machine_code;
+        $this->machineName = $machine->name;
+        $this->machineType = $machine->type;
+        $this->showMachineModal = true;
+    }
+
+    public function saveMachine()
+    {
+        $this->validate([
+            'machineCode' => 'required|string|max:20|unique:machines,machine_code' . ($this->editingMachine ? ",{$this->editMachineId}" : ''),
+            'machineName' => 'required|string|max:100',
+            'machineType' => 'required|in:washer,dryer',
+        ]);
+
+        Machine::updateOrCreate(
+            ['id' => $this->editMachineId],
+            [
+                'machine_code' => $this->machineCode,
+                'name' => $this->machineName,
+                'type' => $this->machineType,
+                'is_active' => true,
+                'is_available' => true,
+            ]
+        );
+
+        $this->showMachineModal = false;
+        $this->resetMachineForm();
+        $this->dispatch('toast', message: $this->editingMachine ? 'Machine updated!' : 'Machine added!', type: 'success');
+    }
+
+    public function toggleMachine($id)
+    {
+        $machine = Machine::find($id);
+        $machine->update(['is_active' => !$machine->is_active]);
+        $this->dispatch('toast', message: $machine->is_active ? 'Machine activated' : 'Machine deactivated', type: 'success');
+    }
+
+    public function deleteMachine($id)
+    {
+        Machine::destroy($id);
+        $this->dispatch('toast', message: 'Machine deleted!', type: 'success');
+    }
+
+    public function resetMachineForm()
+    {
+        $this->machineCode = '';
+        $this->machineName = '';
+        $this->machineType = 'washer';
+    }
 
     public function updatedSearch()
     {
@@ -125,8 +205,9 @@ class MachineLogs extends Component
             ->paginate(15);
 
         $machines = Machine::where('is_active', true)->get();
+        $allMachines = Machine::orderBy('created_at', 'desc')->get();
         $isAdmin = auth()->user()->isAdmin();
 
-        return view('livewire.machine-logs', compact('logs', 'machines', 'isAdmin'));
+        return view('livewire.machine-logs', compact('logs', 'machines', 'allMachines', 'isAdmin'));
     }
 }

@@ -5,12 +5,36 @@
             <h2 class="text-3xl font-black tracking-tight text-primary">Machine Logs</h2>
             <p class="text-on-surface-variant font-medium mt-1">Track washer and dryer cycles</p>
         </div>
+        @if($activeTab === 'machines')
+        <button wire:click="openAddMachine"
+                class="flex items-center gap-2 px-8 py-3 editorial-gradient text-white font-bold rounded-full shadow-lg shadow-primary/20 hover:scale-105 transition-all active:scale-95">
+            <span class="material-symbols-outlined">add_circle</span> Add Machine
+        </button>
+        @else
         <button wire:click="$set('showLogModal', true)"
                 class="flex items-center gap-2 px-8 py-3 editorial-gradient text-white font-bold rounded-full shadow-lg shadow-primary/20 hover:scale-105 transition-all active:scale-95">
             <span class="material-symbols-outlined">play_circle</span> Start Cycle
         </button>
+        @endif
     </div>
 
+    <!-- Tabs -->
+    <div class="flex gap-2 border-b border-surface-container-high">
+        <button wire:click="$set('activeTab', 'logs')"
+                class="px-6 py-3 text-sm font-bold transition-all relative
+                    {{ $activeTab === 'logs' ? 'text-primary' : 'text-on-surface-variant hover:text-on-surface' }}">
+            Machine Logs
+            @if($activeTab === 'logs')<div class="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"></div>@endif
+        </button>
+        <button wire:click="$set('activeTab', 'machines')"
+                class="px-6 py-3 text-sm font-bold transition-all relative
+                    {{ $activeTab === 'machines' ? 'text-primary' : 'text-on-surface-variant hover:text-on-surface' }}">
+            Manage Machines
+            @if($activeTab === 'machines')<div class="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"></div>@endif
+        </button>
+    </div>
+
+    @if($activeTab === 'logs')
     <!-- Filters -->
     <div class="flex flex-wrap gap-4 bg-white p-4 rounded-xl shadow-sm">
         <div class="flex-1 min-w-[200px] relative">
@@ -120,6 +144,80 @@
         </div>
     </div>
 
+    @else
+    <!-- Manage Machines Tab -->
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+        <table class="w-full">
+            <thead>
+                <tr class="border-b border-surface-container-high">
+                    <th class="text-left px-6 py-4 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">Machine</th>
+                    <th class="text-center px-6 py-4 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">Code</th>
+                    <th class="text-center px-6 py-4 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">Type</th>
+                    <th class="text-center px-6 py-4 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">Status</th>
+                    <th class="px-6 py-4"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($allMachines as $machine)
+                <tr class="border-b border-surface-container-highest/50 hover:bg-surface-container-highest/30 transition-colors">
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-full {{ $machine->type === 'washer' ? 'bg-primary-fixed' : 'bg-tertiary-fixed' }} flex items-center justify-center">
+                                <span class="material-symbols-outlined text-lg {{ $machine->type === 'washer' ? 'text-on-primary-fixed' : 'text-on-tertiary-fixed' }}">
+                                    {{ $machine->type === 'washer' ? 'local_laundry_service' : 'dry_cleaning' }}
+                                </span>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-on-surface">{{ $machine->name }}</p>
+                                <p class="text-[10px] text-on-surface-variant font-mono">{{ $machine->machine_code }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-center text-sm font-mono font-medium">{{ $machine->machine_code }}</td>
+                    <td class="px-6 py-4 text-center">
+                        <span class="px-3 py-1 text-[10px] font-bold rounded-full uppercase
+                            {{ $machine->type === 'washer' ? 'bg-primary-fixed text-on-primary-fixed' : 'bg-tertiary-fixed text-on-tertiary-fixed' }}">
+                            {{ $machine->type }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                        @if($machine->is_active)
+                            <span class="px-3 py-1 bg-secondary-container text-on-secondary-fixed-variant text-[10px] font-bold rounded-full">Active</span>
+                        @else
+                            <span class="px-3 py-1 bg-surface-container-high text-on-surface-variant text-[10px] font-bold rounded-full">Inactive</span>
+                        @endif
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex items-center justify-end gap-2">
+                            <button wire:click="toggleMachine({{ $machine->id }})" wire:confirm="{{ $machine->is_active ? 'Deactivate' : 'Activate' }} this machine?"
+                                    class="text-on-surface-variant hover:text-primary transition-colors p-1" title="{{ $machine->is_active ? 'Deactivate' : 'Activate' }}">
+                                <span class="material-symbols-outlined text-xl">{{ $machine->is_active ? 'pause_circle' : 'play_circle' }}</span>
+                            </button>
+                            <button wire:click="openEditMachine({{ $machine->id }})"
+                                    class="text-on-surface-variant hover:text-primary transition-colors p-1" title="Edit">
+                                <span class="material-symbols-outlined text-xl">edit</span>
+                            </button>
+                            <button wire:click="deleteMachine({{ $machine->id }})" wire:confirm="Delete this machine? This cannot be undone."
+                                    class="text-on-surface-variant hover:text-error transition-colors p-1" title="Delete">
+                                <span class="material-symbols-outlined text-xl">delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="5" class="text-center py-16 text-on-surface-variant">
+                        <span class="material-symbols-outlined text-5xl mb-3 opacity-20">precision_manufacturing</span>
+                        <p class="text-sm font-medium">No machines found</p>
+                        <button wire:click="openAddMachine" class="mt-4 text-primary text-sm font-bold hover:underline">Add your first machine</button>
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+    @endif
+
     <!-- Start Cycle Modal -->
     @if($showLogModal)
     <div class="fixed inset-0 bg-black/30 backdrop-blur-sm z-[60] flex items-center justify-center p-4"
@@ -176,6 +274,60 @@
                 <button wire:click="startLog" class="flex-1 py-3 editorial-gradient text-white rounded-full text-sm font-bold shadow-lg hover:opacity-90 transition-all flex items-center justify-center gap-2">
                     <span wire:loading.remove wire:target="startLog">Start Cycle</span>
                     <span wire:loading wire:target="startLog">Starting...</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <!-- Machine Form Modal -->
+    @if($showMachineModal)
+    <div class="fixed inset-0 bg-black/30 backdrop-blur-sm z-[60] flex items-center justify-center p-4"
+         x-data x-on:click.self="$wire.set('showMachineModal', false)">
+        <div class="bg-white rounded-xl p-6 w-full max-w-md shadow-2xl"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="transform scale-95 opacity-0"
+             x-transition:enter-end="transform scale-100 opacity-100">
+            <h3 class="text-lg font-bold text-on-surface mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">{{ $editingMachine ? 'edit' : 'add_circle' }}</span>
+                {{ $editingMachine ? 'Edit Machine' : 'Add New Machine' }}
+            </h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="text-xs font-bold text-on-surface-variant mb-1 block">Machine Code</label>
+                    <input wire:model="machineCode" type="text" maxlength="20" class="w-full bg-surface-container-highest border-none rounded-lg py-3 px-4 text-sm focus:ring-2 focus:ring-primary-fixed" placeholder="e.g. W-001"/>
+                    @error('machineCode') <span class="text-xs text-error">{{ $message }}</span> @enderror
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-on-surface-variant mb-1 block">Machine Name</label>
+                    <input wire:model="machineName" type="text" maxlength="100" class="w-full bg-surface-container-highest border-none rounded-lg py-3 px-4 text-sm focus:ring-2 focus:ring-primary-fixed" placeholder="e.g. Front Load Washer 1"/>
+                    @error('machineName') <span class="text-xs text-error">{{ $message }}</span> @enderror
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-on-surface-variant mb-1 block">Machine Type</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="cursor-pointer">
+                            <input type="radio" wire:model="machineType" value="washer" class="hidden peer"/>
+                            <div class="peer-checked:ring-2 peer-checked:ring-primary-container peer-checked:bg-primary-fixed/10 bg-surface-container-highest rounded-lg p-3 text-center hover:bg-surface-container-high transition-all">
+                                <span class="material-symbols-outlined text-2xl mb-1">local_laundry_service</span>
+                                <p class="text-xs font-bold">Washer</p>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" wire:model="machineType" value="dryer" class="hidden peer"/>
+                            <div class="peer-checked:ring-2 peer-checked:ring-tertiary-container peer-checked:bg-tertiary-fixed/10 bg-surface-container-highest rounded-lg p-3 text-center hover:bg-surface-container-high transition-all">
+                                <span class="material-symbols-outlined text-2xl mb-1">dry_cleaning</span>
+                                <p class="text-xs font-bold">Dryer</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="flex gap-3 mt-6">
+                <button wire:click="$set('showMachineModal', false)" class="flex-1 py-3 border border-outline-variant/30 rounded-full text-sm font-bold hover:bg-surface-container-low transition-colors">Cancel</button>
+                <button wire:click="saveMachine" class="flex-1 py-3 editorial-gradient text-white rounded-full text-sm font-bold shadow-lg hover:opacity-90 transition-all flex items-center justify-center gap-2">
+                    <span wire:loading.remove wire:target="saveMachine">{{ $editingMachine ? 'Update' : 'Add Machine' }}</span>
+                    <span wire:loading wire:target="saveMachine">{{ $editingMachine ? 'Updating...' : 'Adding...' }}</span>
                 </button>
             </div>
         </div>
