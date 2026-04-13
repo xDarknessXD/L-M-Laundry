@@ -9,7 +9,7 @@
             <button wire:click="previousDay" class="p-3 hover:bg-surface-container-high rounded-full transition-colors">
                 <span class="material-symbols-outlined">chevron_left</span>
             </button>
-            <input type="date" wire:model="selectedDate" wire:change="updatedSelectedDate($event.target.value)"
+            <input type="date" wire:model="selectedDate" wire:change="onDateChange($event.target.value)"
                    class="px-4 py-2 bg-white border border-outline-variant rounded-lg text-sm font-medium focus:ring-2 focus:ring-primary">
             <button wire:click="nextDay" class="p-3 hover:bg-surface-container-high rounded-full transition-colors">
                 <span class="material-symbols-outlined">chevron_right</span>

@@ -36,7 +36,7 @@ class DailyReport extends Component
         $this->selectedDate = Carbon::today()->format('Y-m-d');
     }
 
-    public function updatedSelectedDate($value)
+    public function onDateChange($value)
     {
         if ($value) {
             $this->selectedDate = Carbon::parse($value)->format('Y-m-d');
