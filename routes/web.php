@@ -52,6 +52,18 @@ Route::middleware(['auth', 'check.status'])->group(function () {
     Route::get('/inventory', Inventory::class)->name('inventory');
     Route::get('/machine-logs', MachineLogs::class)->name('machine-logs');
 
+    Route::get('/', function () {
+    return redirect()->route('dashboard');
+})->name('home');
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/profile/edit', /* controller or component */)->name('profile.edit');
+    Route::get('/security/edit', /* controller or component */)->name('security.edit');
+});
+
+// For two-factor authentication (typically provided by Laravel Fortify)
+Route::post('/two-factor-challenge', /* Fortify route */)->name('two-factor.login');
+
     /*
     |----------------------------------------------------------------------
     | Admin Only Routes
