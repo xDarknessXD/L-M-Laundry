@@ -4,6 +4,8 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\Attributes\Layout;
+use App\Models\Machine;
+use App\Models\MachineLog;
 use App\Models\Service;
 use App\Models\Transaction;
 use App\Models\InventoryItem;
@@ -35,6 +37,12 @@ class TransactionCreate extends Component
     public $payment_type = 'unpaid';
     public $amount_paid = 0;
 
+    // Machine Assignment
+    public bool $assignMachine = false;
+    public $machine_id = '';
+    public string $cycle_type = 'wash';
+    public $duration_minutes = null;
+
     protected function rules()
     {
         return [
@@ -46,6 +54,39 @@ class TransactionCreate extends Component
     public function updatedServiceId()
     {
         $this->calculateTotals();
+        $this->prefillDuration();
+    }
+
+    public function updatedAssignMachine($value)
+    {
+        if (! $value) {
+            $this->machine_id = '';
+            $this->cycle_type = 'wash';
+            $this->duration_minutes = null;
+        }
+    }
+
+    public function updatedMachineId()
+    {
+        if (! $this->machine_id) return;
+
+        $machine = Machine::find($this->machine_id);
+        if ($machine) {
+            $this->cycle_type = $machine->type === 'dryer' ? 'dry' : 'wash';
+            $this->prefillDuration();
+        }
+    }
+
+    protected function prefillDuration()
+    {
+        if (! $this->service_id || ! $this->machine_id) return;
+
+        $service = Service::find($this->service_id);
+        if ($service) {
+            $this->duration_minutes = $this->cycle_type === 'dry'
+                ? $service->dry_minutes
+                : $service->wash_minutes;
+        }
     }
 
     public function updatedKilos()
@@ -229,6 +270,32 @@ class TransactionCreate extends Component
             }
         }
 
+        // Auto-start machine cycle if machine is assigned
+        if ($this->assignMachine && $this->machine_id) {
+            $duration = (int) $this->duration_minutes;
+
+            $machineLog = MachineLog::create([
+                'machine_id' => $this->machine_id,
+                'cycle_type' => $this->cycle_type,
+                'load_kilos' => $effectiveKilos,
+                'duration_minutes' => $duration,
+                'start_time' => now(),
+                'end_time' => now()->addMinutes($duration),
+                'staff_id' => auth()->id(),
+                'transaction_id' => $transaction->id,
+                'status' => 'in_progress',
+            ]);
+
+            $transaction->update([
+                'machine_id' => $this->machine_id,
+                'cycle_type' => $this->cycle_type,
+                'duration_minutes' => $duration,
+                'machine_started_at' => now(),
+            ]);
+
+            Machine::where('id', $this->machine_id)->update(['is_available' => false]);
+        }
+
         $this->dispatch('toast', message: "Transaction {$transaction->order_number} created!", type: 'success');
         return redirect()->route('transactions');
     }
@@ -240,8 +307,9 @@ class TransactionCreate extends Component
         $inventoryItems = InventoryItem::where('status', '!=', 'out_of_stock')
             ->where('stock_quantity', '>', 0)
             ->get();
+        $machines = Machine::where('is_active', true)->get();
 
-        return view('livewire.transaction-create', compact('services', 'selectedService', 'inventoryItems'))
+        return view('livewire.transaction-create', compact('services', 'selectedService', 'inventoryItems', 'machines'))
             ->layout('layouts.app');
     }
 }

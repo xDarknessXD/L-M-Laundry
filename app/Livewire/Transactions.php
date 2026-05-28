@@ -31,7 +31,7 @@ class Transactions extends Component
 
     public function render()
     {
-        $transactions = Transaction::with(['service', 'creator'])
+        $transactions = Transaction::with(['service', 'creator', 'machine'])
             ->when($this->search, fn($q) => $q->where('customer_name', 'like', "%{$this->search}%")
                 ->orWhere('order_number', 'like', "%{$this->search}%"))
             ->when($this->filterPayment, fn($q) => $q->where('payment_status', $this->filterPayment))

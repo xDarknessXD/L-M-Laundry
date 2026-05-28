@@ -3,11 +3,13 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\Attributes\Layout;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\InventoryItem;
 use App\Models\MachineLog;
 
+#[Layout('layouts.app')]
 class Dashboard extends Component
 {
     public function render()

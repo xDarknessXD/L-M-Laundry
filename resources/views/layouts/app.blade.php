@@ -20,7 +20,7 @@
             @include('components.topbar')
 
             <!-- Page Content -->
-            <div class="flex-1" x-data x-init="$el.classList.add('opacity-0'); setTimeout(() => { $el.classList.remove('opacity-0'); $el.classList.add('transition-opacity', 'duration-500', 'opacity-100'); }, 50)">
+            <div class="flex-1">
                 {{ $slot }}
             </div>
         </main>

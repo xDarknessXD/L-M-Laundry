@@ -47,6 +47,7 @@
                         <th class="text-center px-6 py-4 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">Weight</th>
                         <th class="text-center px-6 py-4 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">Payment</th>
                         <th class="text-center px-6 py-4 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">Status</th>
+                        <th class="text-center px-6 py-4 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">Machine</th>
                         <th class="text-right px-6 py-4 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">Total</th>
                         <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">Date</th>
                         <th class="px-6 py-4"></th>
@@ -82,6 +83,24 @@
                                 <span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold rounded-full animate-pulse">PENDING</span>
                             @endif
                         </td>
+                        <td class="px-6 py-4 text-center">
+                            @if($txn->machine_id)
+                                <div x-data="{
+                                    end: new Date('{{ $txn->machine_started_at?->addMinutes($txn->duration_minutes)->format('c') }}').getTime(),
+                                    now: Date.now()
+                                }" x-init="setInterval(() => { now = Date.now() }, 1000)">
+                                    <span x-show="now < end"
+                                          class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold rounded-full whitespace-nowrap">
+                                        <span x-text="String(Math.floor((end - now) / 60000)).padStart(2, '0')">00</span>:<span x-text="String(Math.floor(((end - now) % 60000) / 1000)).padStart(2, '0')">00</span>
+                                    </span>
+                                    <span x-show="now >= end"
+                                          class="px-3 py-1 bg-secondary-container text-on-secondary-fixed-variant text-[10px] font-bold rounded-full">DONE</span>
+                                    <p class="text-[10px] text-on-surface-variant mt-0.5">{{ $txn->machine?->name }} ({{ $txn->cycle_type }})</p>
+                                </div>
+                            @else
+                                <span class="text-xs text-on-surface-variant">—</span>
+                            @endif
+                        </td>
                         <td class="px-6 py-4 text-right">
                             <span class="text-xs font-bold text-tertiary">₱</span>
                             <span class="text-sm font-black">{{ number_format($txn->total_amount, 2) }}</span>
@@ -95,7 +114,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="9" class="text-center py-16 text-on-surface-variant">
+                        <td colspan="10" class="text-center py-16 text-on-surface-variant">
                             <span class="material-symbols-outlined text-5xl mb-3 opacity-20">receipt_long</span>
                             <p class="text-sm font-medium">No transactions found</p>
                         </td>

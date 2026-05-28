@@ -81,6 +81,68 @@
                     </div>
                 </div>
 
+                <!-- Machine Assignment (Optional) -->
+                <div class="bg-white rounded-xl p-6 shadow-sm space-y-4"
+                     x-data="{ show: @entangle('assignMachine') }">
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" wire:model.live="assignMachine"
+                               class="w-5 h-5 rounded accent-primary">
+                        <h3 class="text-xs font-black uppercase tracking-widest text-on-surface-variant flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">precision_manufacturing</span>
+                            Assign to Machine (Optional)
+                        </h3>
+                    </label>
+
+                    <div x-show="show" x-transition class="space-y-4">
+                        <div>
+                            <label class="text-xs font-bold text-on-surface-variant mb-1 block">Select Machine</label>
+                            <select wire:model.live="machine_id"
+                                    class="w-full bg-surface-container-highest border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary-fixed text-sm">
+                                <option value="">Choose machine...</option>
+                                @foreach(['washer', 'dryer'] as $type)
+                                    @php $group = $machines->where('type', $type); @endphp
+                                    @if($group->count())
+                                        <optgroup label="{{ ucfirst($type) }}s">
+                                            @foreach($group as $machine)
+                                                <option value="{{ $machine->id }}">{{ $machine->name }} ({{ $machine->machine_code }})</option>
+                                            @endforeach
+                                        </optgroup>
+                                    @endif
+                                @endforeach
+                            </select>
+                            @error('machine_id') <p class="text-error text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
+
+                        <div>
+                            <label class="text-xs font-bold text-on-surface-variant mb-1 block">Cycle Type</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <label class="cursor-pointer">
+                                    <input type="radio" wire:model="cycle_type" value="wash" class="hidden peer"/>
+                                    <div class="peer-checked:ring-2 peer-checked:ring-primary-container peer-checked:bg-primary-fixed/10 bg-surface-container-highest rounded-lg p-3 text-center hover:bg-surface-container-high transition-all">
+                                        <span class="material-symbols-outlined text-2xl mb-1">local_laundry_service</span>
+                                        <p class="text-xs font-bold">Wash</p>
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" wire:model="cycle_type" value="dry" class="hidden peer"/>
+                                    <div class="peer-checked:ring-2 peer-checked:ring-tertiary-container peer-checked:bg-tertiary-fixed/10 bg-surface-container-highest rounded-lg p-3 text-center hover:bg-surface-container-high transition-all">
+                                        <span class="material-symbols-outlined text-2xl mb-1">dry_cleaning</span>
+                                        <p class="text-xs font-bold">Dry</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="text-xs font-bold text-on-surface-variant mb-1 block">Duration (minutes)</label>
+                            <input wire:model="duration_minutes" type="number" min="1"
+                                   class="w-full bg-surface-container-highest border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary-fixed text-sm"
+                                   placeholder="e.g. 45"/>
+                            @error('duration_minutes') <p class="text-error text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Addons -->
                 <div class="bg-white rounded-xl p-6 shadow-sm space-y-4">
                     <div class="flex items-center justify-between">
@@ -176,13 +238,13 @@
     </div>
 
     <!-- Right Panel: Receipt Preview -->
-    <div class="w-[380px] bg-surface-container-low p-8 border-l border-outline-variant/20 hidden lg:flex flex-col items-center">
+    <div id="receipt-panel" class="w-[380px] bg-surface-container-low p-8 border-l border-outline-variant/20 hidden lg:flex flex-col items-center">
         <div class="sticky top-28 w-full space-y-6">
             <h3 class="text-xs font-black uppercase tracking-widest text-on-surface-variant flex items-center gap-2">
                 <span class="material-symbols-outlined text-sm">receipt</span> Receipt Preview
             </h3>
 
-            <div class="bg-white rounded-xl p-6 shadow-sm receipt-jagged space-y-4 pb-10">
+            <div id="printable-receipt" class="bg-white rounded-xl p-6 shadow-sm receipt-jagged space-y-4 pb-10">
                 <div class="text-center border-b border-dashed border-outline-variant/30 pb-4">
                     <p class="font-black text-primary text-lg">J&M Laundry</p>
                     <p class="text-[10px] text-on-surface-variant uppercase tracking-widest">Official Receipt</p>
@@ -207,6 +269,16 @@
                         <span class="text-on-surface-variant">Material</span>
                         <span class="font-semibold text-on-surface capitalize">{{ $material_type }}</span>
                     </div>
+                    @if($assignMachine && $machine_id)
+                    <div class="flex justify-between">
+                        <span class="text-on-surface-variant">Machine</span>
+                        <span class="font-semibold text-on-surface">
+                            @php $machine = \App\Models\Machine::find($machine_id); @endphp
+                            {{ $machine?->name ?? 'N/A' }}
+                            ({{ $duration_minutes ?? '—' }} min)
+                        </span>
+                    </div>
+                    @endif
                 </div>
 
                 <div class="border-t border-dashed border-outline-variant/30 pt-3 space-y-1">
@@ -243,6 +315,11 @@
                     @endif
                 </div>
             </div>
+
+            <button x-on:click="window.print()" class="no-print w-full py-3 border border-outline-variant/30 rounded-full text-sm font-bold text-primary hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-lg">print</span>
+                Print Receipt
+            </button>
         </div>
     </div>
 

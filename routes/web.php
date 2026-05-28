@@ -1,7 +1,6 @@
 <?php
 
 use App\Livewire\Auth\Login;
-use App\Livewire\Auth\Register;
 use App\Livewire\DailyReport;
 use App\Livewire\Dashboard;
 use App\Livewire\Inventory;
@@ -20,8 +19,7 @@ use Illuminate\Support\Facades\Route;
 */
 Route::middleware('guest')->group(function () {
     Route::get('/login', Login::class)->name('login');
-    Route::get('/register', Register::class)->name('register');
-});
+    });
 
 Route::get('/waiting', function () {
     return view('waiting');

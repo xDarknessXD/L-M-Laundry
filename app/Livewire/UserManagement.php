@@ -3,13 +3,24 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\Attributes\Layout;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
+#[Layout('layouts.app')]
 class UserManagement extends Component
 {
     public string $search = '';
     public string $filterStatus = '';
     public string $filterRole = '';
+
+    public string $newName = '';
+    public string $newEmail = '';
+    public string $newPhone = '';
+    public string $newPassword = '';
+    public string $newPasswordConfirmation = '';
+    public string $newRole = 'staff';
+    public bool $showCreateForm = false;
 
     public function approveUser($userId)
     {
@@ -54,6 +65,32 @@ class UserManagement extends Component
             $user->delete();
             $this->dispatch('toast', message: 'User deleted.', type: 'success');
         }
+    }
+
+    public function createUser()
+    {
+        $this->validate([
+            'newName' => 'required|min:2|max:255',
+            'newEmail' => 'required|email|unique:users,email',
+            'newPhone' => 'nullable|string|max:20',
+            'newPassword' => 'required|min:8|same:newPasswordConfirmation',
+            'newPasswordConfirmation' => 'required',
+            'newRole' => 'required|in:admin,staff',
+        ]);
+
+        User::create([
+            'name' => $this->newName,
+            'email' => $this->newEmail,
+            'phone' => $this->newPhone,
+            'password' => Hash::make($this->newPassword),
+            'role' => $this->newRole,
+            'status' => 'pending',
+        ]);
+
+        $this->reset('newName', 'newEmail', 'newPhone', 'newPassword', 'newPasswordConfirmation', 'newRole');
+        $this->showCreateForm = false;
+
+        $this->dispatch('toast', message: 'User account created!', type: 'success');
     }
 
     public function render()

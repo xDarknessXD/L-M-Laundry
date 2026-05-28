@@ -79,7 +79,7 @@
                                     <button wire:click="openEditItem({{ $item->id }})" class="text-primary-container hover:text-primary transition-colors p-1">
                                         <span class="material-symbols-outlined text-xl">edit</span>
                                     </button>
-                                    <button wire:click="deleteItem({{ $item->id }})" wire:confirm="Delete {{ $item->name }}?" class="text-error hover:text-error/80 transition-colors p-1">
+                                    <button x-on:click.prevent="$dispatch('confirm-action', { message: 'Delete {!! addslashes($item->name) !!}?', method: 'deleteItem', params: [{{ $item->id }}] })" class="text-error hover:text-error/80 transition-colors p-1">
                                         <span class="material-symbols-outlined text-xl">delete</span>
                                     </button>
                                 </div>
@@ -188,4 +188,6 @@
         </div>
     </div>
     @endif
+
+    <x-confirm-modal />
 </div>

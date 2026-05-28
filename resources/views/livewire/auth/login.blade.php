@@ -57,11 +57,7 @@
                 </span>
             </button>
 
-            <div class="mt-6 text-center text-sm font-medium text-on-surface-variant">
-                <span>Don't have an account?</span>
-                <a href="{{ route('register') }}" class="text-primary font-bold hover:underline ml-1 transition-all">Register</a>
-            </div>
-        </form>
+                    </form>
     </div>
 
     <!-- Footer -->

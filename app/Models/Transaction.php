@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
@@ -11,6 +12,7 @@ class Transaction extends Model
         'material_type', 'kilos', 'minutes_per_kilo', 'subtotal',
         'addons_total', 'total_amount', 'amount_paid', 'balance',
         'payment_status', 'order_status', 'created_by',
+        'machine_id', 'cycle_type', 'duration_minutes', 'machine_started_at',
     ];
 
     protected $casts = [
@@ -20,6 +22,8 @@ class Transaction extends Model
         'total_amount' => 'decimal:2',
         'amount_paid' => 'decimal:2',
         'balance' => 'decimal:2',
+        'machine_started_at' => 'datetime',
+        'duration_minutes' => 'integer',
     ];
 
     public function service()
@@ -35,6 +39,37 @@ class Transaction extends Model
     public function addons()
     {
         return $this->hasMany(TransactionAddon::class);
+    }
+
+    public function machine()
+    {
+        return $this->belongsTo(Machine::class);
+    }
+
+    public function getMachineStatusAttribute()
+    {
+        if (! $this->machine_started_at || ! $this->duration_minutes) {
+            return null;
+        }
+
+        $end = $this->machine_started_at->copy()->addMinutes($this->duration_minutes);
+
+        if ($end->isPast()) {
+            return 'completed';
+        }
+
+        return 'running';
+    }
+
+    public function getRemainingSecondsAttribute()
+    {
+        if (! $this->machine_started_at || ! $this->duration_minutes || $this->machine_status !== 'running') {
+            return 0;
+        }
+
+        $end = $this->machine_started_at->copy()->addMinutes($this->duration_minutes);
+
+        return max(0, Carbon::now()->diffInSeconds($end, false));
     }
 
     public static function generateOrderNumber(): string

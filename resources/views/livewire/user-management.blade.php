@@ -5,12 +5,19 @@
             <h2 class="text-3xl font-black tracking-tight text-primary">User Management</h2>
             <p class="text-on-surface-variant font-medium mt-1">Manage staff accounts and access control</p>
         </div>
-        @if($pendingCount > 0)
-        <div class="flex items-center gap-2 px-4 py-2 bg-tertiary-fixed text-on-tertiary-fixed rounded-full animate-pulse">
-            <span class="material-symbols-outlined text-lg">person_add</span>
-            <span class="text-sm font-bold">{{ $pendingCount }} pending</span>
+        <div class="flex items-center gap-3">
+            @if($pendingCount > 0)
+            <div class="flex items-center gap-2 px-4 py-2 bg-tertiary-fixed text-on-tertiary-fixed rounded-full animate-pulse">
+                <span class="material-symbols-outlined text-lg">person_add</span>
+                <span class="text-sm font-bold">{{ $pendingCount }} pending</span>
+            </div>
+            @endif
+            <button wire:click="$toggle('showCreateForm')"
+                    class="flex items-center gap-2 px-5 py-2.5 bg-primary text-white font-bold text-sm rounded-full hover:opacity-90 active:scale-[0.97] transition-all shadow-md shadow-primary/20">
+                <span class="material-symbols-outlined text-lg">add</span>
+                Create Staff
+            </button>
         </div>
-        @endif
     </div>
 
     <!-- Filters -->
@@ -34,10 +41,88 @@
         </select>
     </div>
 
+    <!-- Create User Form -->
+    @if($showCreateForm)
+    <div class="bg-white rounded-xl p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h3 class="text-lg font-bold text-on-surface">Create Staff Account</h3>
+                <p class="text-sm text-on-surface-variant">New accounts start as pending until approved</p>
+            </div>
+            <button type="button" wire:click="$set('showCreateForm', false)" class="text-on-surface-variant hover:text-on-surface transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <form wire:submit="createUser" onsubmit="return false" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex flex-col gap-2">
+                <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Full Name</label>
+                <input wire:model="newName" type="text"
+                       class="w-full bg-surface-container-highest border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary-fixed transition-all text-on-surface placeholder:text-outline/50"
+                       placeholder="Juan Dela Cruz"/>
+                @error('newName') <p class="text-error text-xs font-medium">{{ $message }}</p> @enderror
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Email Address</label>
+                <input wire:model="newEmail" type="email"
+                       class="w-full bg-surface-container-highest border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary-fixed transition-all text-on-surface placeholder:text-outline/50"
+                       placeholder="staff@jmlaundry.com"/>
+                @error('newEmail') <p class="text-error text-xs font-medium">{{ $message }}</p> @enderror
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Phone Number</label>
+                <input wire:model="newPhone" type="tel"
+                       class="w-full bg-surface-container-highest border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary-fixed transition-all text-on-surface placeholder:text-outline/50"
+                       placeholder="+63 900 000 0000"/>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Role</label>
+                <select wire:model="newRole"
+                        class="w-full bg-surface-container-highest border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary-fixed transition-all text-on-surface">
+                    <option value="staff">Staff</option>
+                    <option value="admin">Admin</option>
+                </select>
+                @error('newRole') <p class="text-error text-xs font-medium">{{ $message }}</p> @enderror
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Password</label>
+                <input wire:model="newPassword" type="password"
+                       class="w-full bg-surface-container-highest border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary-fixed transition-all text-on-surface placeholder:text-outline/50"
+                       placeholder="••••••••"/>
+                @error('newPassword') <p class="text-error text-xs font-medium">{{ $message }}</p> @enderror
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Confirm Password</label>
+                <input wire:model="newPasswordConfirmation" type="password"
+                       class="w-full bg-surface-container-highest border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary-fixed transition-all text-on-surface placeholder:text-outline/50"
+                       placeholder="••••••••"/>
+                @error('newPasswordConfirmation') <p class="text-error text-xs font-medium">{{ $message }}</p> @enderror
+            </div>
+            <div class="md:col-span-2 flex justify-end gap-3 pt-2">
+                <button type="button" wire:click="$set('showCreateForm', false)"
+                        class="px-6 py-2.5 border border-outline-variant/30 text-sm font-bold rounded-full hover:bg-surface-container-low transition-colors">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="px-6 py-2.5 bg-primary text-white text-sm font-bold rounded-full hover:opacity-90 active:scale-[0.97] transition-all flex items-center gap-2 shadow-md shadow-primary/20">
+                    <span wire:loading.remove wire:target="createUser" class="material-symbols-outlined text-lg">person_add</span>
+                    <span wire:loading.remove wire:target="createUser">Create Account</span>
+                    <span wire:loading wire:target="createUser" class="flex items-center gap-2">
+                        <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                        </svg>
+                        Creating...
+                    </span>
+                </button>
+            </div>
+        </form>
+    </div>
+    @endif
+
     <!-- Users Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         @forelse($users as $user)
-        <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow relative
+        <div wire:key="user-{{ $user->id }}" class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow relative
             {{ $user->status === 'pending' ? 'ring-2 ring-tertiary-container' : '' }}">
             <!-- Status indicator -->
             <div class="absolute top-4 right-4">
@@ -78,7 +163,7 @@
                         <span class="material-symbols-outlined text-sm">check</span> Approve
                     </button>
                 @elseif($user->status === 'active')
-                    <button wire:click="suspendUser({{ $user->id }})" wire:confirm="Suspend {{ $user->name }}?"
+                    <button x-on:click.prevent="$dispatch('confirm-action', { message: 'Suspend {!! addslashes($user->name) !!}?', method: 'suspendUser', params: [{{ $user->id }}] })"
                             class="flex-1 py-2 bg-error-container text-on-error-container text-xs font-bold rounded-full hover:opacity-90 transition-all flex items-center justify-center gap-1">
                         <span class="material-symbols-outlined text-sm">block</span> Suspend
                     </button>
@@ -95,7 +180,7 @@
                     <span class="material-symbols-outlined text-sm">swap_horiz</span>
                 </button>
 
-                <button wire:click="deleteUser({{ $user->id }})" wire:confirm="Delete {{ $user->name }}? This cannot be undone."
+                <button x-on:click.prevent="$dispatch('confirm-action', { message: 'Delete {!! addslashes($user->name) !!}? This cannot be undone.', method: 'deleteUser', params: [{{ $user->id }}] })"
                         class="py-2 px-3 text-error border border-error/20 text-xs font-bold rounded-full hover:bg-error-container/30 transition-colors">
                     <span class="material-symbols-outlined text-sm">delete</span>
                 </button>
@@ -113,4 +198,6 @@
         </div>
         @endforelse
     </div>
+
+    <x-confirm-modal />
 </div>

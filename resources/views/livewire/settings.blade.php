@@ -77,7 +77,7 @@
                         <button wire:click="toggleService({{ $service->id }})" class="text-on-surface-variant hover:text-on-surface p-1 transition-colors">
                             <span class="material-symbols-outlined text-lg">{{ $service->is_active ? 'toggle_on' : 'toggle_off' }}</span>
                         </button>
-                        <button wire:click="deleteService({{ $service->id }})" wire:confirm="Delete {{ $service->name }}?" class="text-error hover:text-error/80 p-1 transition-colors">
+                        <button x-on:click.prevent="$dispatch('confirm-action', { message: 'Delete {!! addslashes($service->name) !!}?', method: 'deleteService', params: [{{ $service->id }}] })" class="text-error hover:text-error/80 p-1 transition-colors">
                             <span class="material-symbols-outlined text-lg">delete</span>
                         </button>
                     </div>
@@ -217,4 +217,6 @@
         </div>
     </div>
     @endif
+
+    <x-confirm-modal />
 </div>

@@ -143,3 +143,46 @@
 .count-up {
     animation: countUp 0.6s ease-out;
 }
+
+/* Print Styles */
+@media print {
+    html, body {
+        background: white !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+    body * {
+        visibility: hidden !important;
+    }
+    #receipt-panel,
+    #receipt-panel * {
+        visibility: visible !important;
+    }
+    #receipt-panel {
+        display: flex !important;
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background: white !important;
+        border: none !important;
+        padding: 0 !important;
+        z-index: 9999 !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+    #printable-receipt {
+        width: 340px !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 2rem !important;
+    }
+    #printable-receipt::after {
+        display: none !important;
+    }
+    .no-print {
+        display: none !important;
+    }
+}

@@ -123,7 +123,7 @@
                     <td class="px-6 py-4 text-xs text-on-surface-variant">{{ $log->start_time?->format('M d, h:i A') ?? '—' }}</td>
                     <td class="px-6 py-4">
                         @if($log->status === 'in_progress')
-                        <button wire:click="completeLog({{ $log->id }})" wire:confirm="Mark this cycle as completed?"
+                        <button x-on:click.prevent="$dispatch('confirm-action', { message: 'Mark this cycle as completed?', method: 'completeLog', params: [{{ $log->id }}] })"
                                 class="text-secondary hover:text-secondary/80 transition-colors p-1">
                             <span class="material-symbols-outlined text-xl">check_circle</span>
                         </button>
@@ -191,7 +191,7 @@
                     <td class="px-6 py-4">
                         <div class="flex items-center justify-end gap-2">
                             @if($isAdmin)
-                            <button wire:click="toggleMachine({{ $machine->id }})" wire:confirm="{{ $machine->is_active ? 'Deactivate' : 'Activate' }} this machine?"
+                            <button x-on:click.prevent="$dispatch('confirm-action', { message: '{{ $machine->is_active ? 'Deactivate' : 'Activate' }} this machine?', method: 'toggleMachine', params: [{{ $machine->id }}] })"
                                     class="text-on-surface-variant hover:text-primary transition-colors p-1" title="{{ $machine->is_active ? 'Deactivate' : 'Activate' }}">
                                 <span class="material-symbols-outlined text-xl">{{ $machine->is_active ? 'pause_circle' : 'play_circle' }}</span>
                             </button>
@@ -199,7 +199,7 @@
                                     class="text-on-surface-variant hover:text-primary transition-colors p-1" title="Edit">
                                 <span class="material-symbols-outlined text-xl">edit</span>
                             </button>
-                            <button wire:click="deleteMachine({{ $machine->id }})" wire:confirm="Delete this machine? This cannot be undone."
+                            <button x-on:click.prevent="$dispatch('confirm-action', { message: 'Delete this machine? This cannot be undone.', method: 'deleteMachine', params: [{{ $machine->id }}] })"
                                     class="text-on-surface-variant hover:text-error transition-colors p-1" title="Delete">
                                 <span class="material-symbols-outlined text-xl">delete</span>
                             </button>
@@ -340,4 +340,6 @@
         </div>
     </div>
     @endif
+
+    <x-confirm-modal />
 </div>

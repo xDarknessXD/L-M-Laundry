@@ -26,6 +26,14 @@
         <div>
             <h2 class="text-3xl font-black tracking-tight text-primary">Operations Overview</h2>
             <p class="text-on-surface-variant font-medium mt-1">Real-time status of J&M Laundry Lounge</p>
+            <div class="flex items-center gap-2 text-sm text-on-surface-variant/70 mt-1"
+                 x-data="{ date: '', time: '', update() { const n = new Date(); this.date = n.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); this.time = n.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' }); } }"
+                 x-init="update(); setInterval(() => update(), 1000)">
+                <span class="material-symbols-outlined text-sm">schedule</span>
+                <span x-text="date"></span>
+                <span class="text-outline/40">•</span>
+                <span x-text="time" class="font-mono"></span>
+            </div>
         </div>
         @if($isAdmin)
         <div class="flex gap-3">
