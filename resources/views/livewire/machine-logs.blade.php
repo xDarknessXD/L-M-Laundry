@@ -125,8 +125,7 @@
                         @if($log->status === 'in_progress')
                         <button x-on:click.prevent="$dispatch('confirm-action', { message: 'Mark this cycle as completed?', method: 'completeLog', params: [{{ $log->id }}] })"
                                 class="text-secondary hover:text-secondary/80 transition-colors p-1">
-                            <span class="material-symbols-outlined text-xl">check_circle</span>
-                        </button>
+                            <span class="material-symbols-outlined text-xl">schedule</span>                        </button>
                         @endif
                     </td>
                 </tr>
