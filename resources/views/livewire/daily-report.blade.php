@@ -1,22 +1,51 @@
 <div class="p-8 max-w-7xl mx-auto space-y-6">
-    <!-- Header with Date Navigation -->
-    <div class="flex items-center justify-between">
-        <div>
-            <h2 class="text-3xl font-black tracking-tight text-primary">Daily Report</h2>
-            <p class="text-on-surface-variant font-medium mt-1">Overview of daily operations</p>
+    <!-- Period Selector & Header -->
+    <div class="flex flex-col gap-6">
+        <div class="flex items-center justify-between">
+            <div class="flex rounded-lg bg-surface-container-high p-1">
+                <button wire:click="setPeriod('daily')"
+                        class="px-4 py-2 rounded-lg text-sm font-bold transition-all duration-200
+                               {{ $period === 'daily' ? 'bg-white text-primary shadow-sm' : 'text-on-surface-variant hover:text-on-surface' }}">
+                    Daily
+                </button>
+                <button wire:click="setPeriod('weekly')"
+                        class="px-4 py-2 rounded-md text-sm font-bold transition-all duration-200
+                               {{ $period === 'weekly' ? 'bg-white text-primary shadow-sm' : 'text-on-surface-variant hover:text-on-surface' }}">
+                    Weekly
+                </button>
+                <button wire:click="setPeriod('monthly')"
+                        class="px-4 py-2 rounded-lg text-sm font-bold transition-all duration-200
+                               {{ $period === 'monthly' ? 'bg-white text-primary shadow-sm' : 'text-on-surface-variant hover:text-on-surface' }}">
+                    Monthly
+                </button>
+            </div>
         </div>
-        <div class="flex items-center gap-3">
-            <button wire:click="previousDay" class="p-3 hover:bg-surface-container-high rounded-full transition-colors">
-                <span class="material-symbols-outlined">chevron_left</span>
-            </button>
-            <input type="date" wire:model="selectedDate" wire:change="onDateChange($event.target.value)"
-                   class="px-4 py-2 bg-white border border-outline-variant rounded-lg text-sm font-medium focus:ring-2 focus:ring-primary">
-            <button wire:click="nextDay" class="p-3 hover:bg-surface-container-high rounded-full transition-colors">
-                <span class="material-symbols-outlined">chevron_right</span>
-            </button>
-            <button wire:click="goToToday" class="px-4 py-2 bg-primary-fixed text-on-primary-fixed font-bold rounded-full text-sm hover:opacity-90 transition-all">
-                Today
-            </button>
+
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-3xl font-black tracking-tight text-primary">{{ $this->getPeriodLabel() }}</h2>
+                <p class="text-on-surface-variant font-medium mt-1">{{ $this->getPeriodDescription() }}</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button wire:click="previousDay" class="p-3 hover:bg-surface-container-high rounded-full transition-colors">
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+
+                <input type="date" wire:model="selectedDate" wire:change="onDateChange($event.target.value)"
+                       class="px-4 py-2 bg-white border border-outline-variant rounded-lg text-sm font-medium focus:ring-2 focus:ring-primary">
+                @if($period !== 'daily')
+                    <span class="text-xs font-semibold text-on-surface-variant min-w-[180px] text-center">
+                        {{ $this->getDateRangeLabel() }}
+                    </span>
+                @endif
+
+                <button wire:click="nextDay" class="p-3 hover:bg-surface-container-high rounded-full transition-colors">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+                <button wire:click="goToToday" class="px-4 py-2 bg-primary-fixed text-on-primary-fixed font-bold rounded-full text-sm hover:opacity-90 transition-all">
+                    Today
+                </button>
+            </div>
         </div>
     </div>
 
@@ -142,6 +171,81 @@
             </div>
         </div>
 
+        <!-- Machine Activity Summary -->
+        @php $machineStats = $this->getMachineStats(); @endphp
+        @if($machineStats['total_loads'] > 0)
+        <div class="bg-white rounded-xl p-6 shadow-sm">
+            <h3 class="text-lg font-bold text-on-surface mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">precision_manufacturing</span>
+                Machine Activity Summary
+            </h3>
+            <table class="w-full">
+                <thead>
+                    <tr class="border-b border-surface-container-high">
+                        <th class="text-left px-4 py-3 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">Cycle</th>
+                        <th class="text-center px-4 py-3 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">Loads</th>
+                        <th class="text-center px-4 py-3 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">Kilos</th>
+                        <th class="text-right px-4 py-3 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">Minutes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-surface-container-highest/50">
+                        <td class="px-4 py-3 text-sm font-semibold text-primary capitalize">
+                            <span class="material-symbols-outlined text-[14px] align-middle mr-1">local_laundry_service</span>
+                            Wash
+                        </td>
+                        <td class="px-4 py-3 text-center text-sm font-bold text-on-surface">{{ $machineStats['wash_loads'] }}</td>
+                        <td class="px-4 py-3 text-center text-sm font-bold text-on-surface">{{ number_format($machineStats['wash_kilos'], 1) }} kg</td>
+                        <td class="px-4 py-3 text-right text-sm font-bold text-on-surface">{{ number_format($machineStats['wash_minutes']) }} min</td>
+                    </tr>
+                    <tr class="border-b border-surface-container-highest/50">
+                        <td class="px-4 py-3 text-sm font-semibold text-tertiary capitalize">
+                            <span class="material-symbols-outlined text-[14px] align-middle mr-1">dry_cleaning</span>
+                            Dry
+                        </td>
+                        <td class="px-4 py-3 text-center text-sm font-bold text-on-surface">{{ $machineStats['dry_loads'] }}</td>
+                        <td class="px-4 py-3 text-center text-sm font-bold text-on-surface">{{ number_format($machineStats['dry_kilos'], 1) }} kg</td>
+                        <td class="px-4 py-3 text-right text-sm font-bold text-on-surface">{{ number_format($machineStats['dry_minutes']) }} min</td>
+                    </tr>
+                    <tr class="bg-primary-fixed/5">
+                        <td class="px-4 py-3 text-sm font-black text-on-surface">Total</td>
+                        <td class="px-4 py-3 text-center text-sm font-black text-on-surface">{{ $machineStats['total_loads'] }}</td>
+                        <td class="px-4 py-3 text-center text-sm font-black text-on-surface">{{ number_format($machineStats['total_kilos'], 1) }} kg</td>
+                        <td class="px-4 py-3 text-right text-sm font-black text-on-surface">{{ number_format($machineStats['total_minutes']) }} min</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            @if(count($machineStats['by_machine']) > 0)
+            <h4 class="text-sm font-bold text-on-surface mb-3 mt-6">Machine Breakdown</h4>
+            <table class="w-full">
+                <thead>
+                    <tr class="border-b border-surface-container-high">
+                        <th class="text-left px-4 py-2 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">Machine</th>
+                        <th class="text-left px-4 py-2 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">Cycle</th>
+                        <th class="text-center px-4 py-2 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">Loads</th>
+                        <th class="text-center px-4 py-2 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">Kilos</th>
+                        <th class="text-right px-4 py-2 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">Minutes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($machineStats['by_machine'] as $row)
+                    <tr class="border-b border-surface-container-highest/50">
+                        <td class="px-4 py-2 text-sm font-medium text-on-surface">{{ $row['machine_name'] }}</td>
+                        <td class="px-4 py-2 text-sm capitalize font-semibold {{ $row['cycle_type'] === 'wash' ? 'text-primary' : 'text-tertiary' }}">
+                            {{ $row['cycle_type'] }}
+                        </td>
+                        <td class="px-4 py-2 text-center text-sm font-bold text-on-surface">{{ $row['loads'] }}</td>
+                        <td class="px-4 py-2 text-center text-sm font-bold text-on-surface">{{ number_format($row['kilos'], 1) }} kg</td>
+                        <td class="px-4 py-2 text-right text-sm font-bold text-on-surface">{{ number_format($row['minutes']) }} min</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            @endif
+        </div>
+        @endif
+
         <!-- Latest Transactions -->
         <div class="bg-white rounded-xl p-6 shadow-sm">
             <h3 class="text-lg font-bold text-on-surface mb-4 flex items-center gap-2">
@@ -183,7 +287,11 @@
         <div class="bg-white rounded-xl p-16 shadow-sm text-center">
             <span class="material-symbols-outlined text-6xl text-on-surface-variant/20 mb-4">event_busy</span>
             <h3 class="text-xl font-bold text-on-surface mb-2">No Transactions</h3>
-            <p class="text-on-surface-variant">No transactions found for {{ \Carbon\Carbon::parse($selectedDate)->format('F d, Y') }}</p>
+            <p class="text-on-surface-variant">No transactions found for {{ $this->getDateRangeLabel() }}</p>
+            <button wire:click="goToToday" class="mt-6 px-6 py-3 bg-primary-fixed text-on-primary-fixed font-bold rounded-full text-sm hover:opacity-90 transition-all inline-flex items-center gap-2">
+                <span class="material-symbols-outlined text-[16px]">today</span>
+                Go to current {{ $period }}
+            </button>
         </div>
     @endif
 </div>

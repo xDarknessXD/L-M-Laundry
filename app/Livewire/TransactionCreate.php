@@ -42,6 +42,7 @@ class TransactionCreate extends Component
     public $machine_id = '';
     public string $cycle_type = 'wash';
     public $duration_minutes = null;
+    public int $number_of_loads = 1;
 
     protected function rules()
     {
@@ -63,7 +64,14 @@ class TransactionCreate extends Component
             $this->machine_id = '';
             $this->cycle_type = 'wash';
             $this->duration_minutes = null;
+            $this->number_of_loads = 1;
         }
+    }
+
+    public function updatedCycleType()
+    {
+        $this->machine_id = '';
+        $this->prefillDuration();
     }
 
     public function updatedMachineId()
@@ -72,7 +80,7 @@ class TransactionCreate extends Component
 
         $machine = Machine::find($this->machine_id);
         if ($machine) {
-            $this->cycle_type = $machine->type === 'dryer' ? 'dry' : 'wash';
+            $this->cycle_type = strtolower($machine->type) === 'dryer' ? 'dry' : 'wash';
             $this->prefillDuration();
         }
     }
@@ -87,6 +95,18 @@ class TransactionCreate extends Component
                 ? $service->dry_minutes
                 : $service->wash_minutes;
         }
+    }
+
+    public function getPerLoadKilosProperty()
+    {
+        if (! $this->kilos || $this->number_of_loads < 1) return 0;
+        return (float) $this->kilos / $this->number_of_loads;
+    }
+
+    public function getTotalMachineDurationProperty()
+    {
+        if (! $this->duration_minutes) return 0;
+        return (int) $this->duration_minutes * $this->number_of_loads;
     }
 
     public function updatedKilos()
@@ -237,6 +257,7 @@ class TransactionCreate extends Component
             'service_id' => $this->service_id,
             'material_type' => $this->material_type,
             'kilos' => $effectiveKilos,
+            'number_of_loads' => $this->number_of_loads,
             'minutes_per_kilo' => $minutesPerKilo,
             'subtotal' => $this->subtotal,
             'addons_total' => $this->addonsTotal,
@@ -272,24 +293,29 @@ class TransactionCreate extends Component
 
         // Auto-start machine cycle if machine is assigned
         if ($this->assignMachine && $this->machine_id) {
-            $duration = (int) $this->duration_minutes;
+            $perLoadKilos = $effectiveKilos / $this->number_of_loads;
+            $perLoadDuration = (int) $this->duration_minutes;
+            $totalDuration = $perLoadDuration * $this->number_of_loads;
 
-            $machineLog = MachineLog::create([
-                'machine_id' => $this->machine_id,
-                'cycle_type' => $this->cycle_type,
-                'load_kilos' => $effectiveKilos,
-                'duration_minutes' => $duration,
-                'start_time' => now(),
-                'end_time' => now()->addMinutes($duration),
-                'staff_id' => auth()->id(),
-                'transaction_id' => $transaction->id,
-                'status' => 'in_progress',
-            ]);
+            for ($i = 0; $i < $this->number_of_loads; $i++) {
+                $start = now()->addMinutes($i * $perLoadDuration);
+                MachineLog::create([
+                    'machine_id' => $this->machine_id,
+                    'cycle_type' => $this->cycle_type,
+                    'load_kilos' => $perLoadKilos,
+                    'duration_minutes' => $perLoadDuration,
+                    'start_time' => $start,
+                    'end_time' => $start->copy()->addMinutes($perLoadDuration),
+                    'staff_id' => auth()->id(),
+                    'transaction_id' => $transaction->id,
+                    'status' => 'in_progress',
+                ]);
+            }
 
             $transaction->update([
                 'machine_id' => $this->machine_id,
                 'cycle_type' => $this->cycle_type,
-                'duration_minutes' => $duration,
+                'duration_minutes' => $totalDuration,
                 'machine_started_at' => now(),
             ]);
 
@@ -307,7 +333,10 @@ class TransactionCreate extends Component
         $inventoryItems = InventoryItem::where('status', '!=', 'out_of_stock')
             ->where('stock_quantity', '>', 0)
             ->get();
-        $machines = Machine::where('is_active', true)->get();
+        $machineType = $this->cycle_type === 'dry' ? 'dryer' : 'washer';
+        $machines = Machine::where('is_active', true)
+            ->where('type', $machineType)
+            ->get();
 
         return view('livewire.transaction-create', compact('services', 'selectedService', 'inventoryItems', 'machines'))
             ->layout('layouts.app');

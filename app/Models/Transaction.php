@@ -9,7 +9,7 @@ class Transaction extends Model
 {
     protected $fillable = [
         'order_number', 'customer_name', 'customer_phone', 'service_id',
-        'material_type', 'kilos', 'minutes_per_kilo', 'subtotal',
+        'material_type', 'kilos', 'number_of_loads', 'minutes_per_kilo', 'subtotal',
         'addons_total', 'total_amount', 'amount_paid', 'balance',
         'payment_status', 'order_status', 'created_by',
         'machine_id', 'cycle_type', 'duration_minutes', 'machine_started_at',
@@ -24,6 +24,7 @@ class Transaction extends Model
         'balance' => 'decimal:2',
         'machine_started_at' => 'datetime',
         'duration_minutes' => 'integer',
+        'number_of_loads' => 'integer',
     ];
 
     public function service()
@@ -44,6 +45,11 @@ class Transaction extends Model
     public function machine()
     {
         return $this->belongsTo(Machine::class);
+    }
+
+    public function machineLogs()
+    {
+        return $this->hasMany(MachineLog::class);
     }
 
     public function getMachineStatusAttribute()

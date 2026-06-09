@@ -169,9 +169,19 @@ class MachineLogs extends Component
                 'status' => 'completed',
                 'end_time' => now(),
             ]);
-            $log->machine->update(['is_available' => true]);
+            if (! $this->machineHasOtherActiveLogs($log)) {
+                $log->machine->update(['is_available' => true]);
+            }
             $this->dispatch('toast', message: 'Cycle marked as completed.', type: 'success');
         }
+    }
+
+    private function machineHasOtherActiveLogs(MachineLog $log): bool
+    {
+        return MachineLog::where('machine_id', $log->machine_id)
+            ->where('id', '!=', $log->id)
+            ->where('status', 'in_progress')
+            ->exists();
     }
 
     protected function checkAndCompleteExpiredLogs()
@@ -186,7 +196,7 @@ class MachineLogs extends Component
                 'status' => 'completed',
                 'end_time' => now(),
             ]);
-            if ($log->machine) {
+            if ($log->machine && ! $this->machineHasOtherActiveLogs($log)) {
                 $log->machine->update(['is_available' => true]);
             }
         }

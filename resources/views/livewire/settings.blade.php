@@ -15,10 +15,10 @@
                 class="px-6 py-2.5 rounded-full text-sm font-bold transition-all {{ $activeTab === 'account' ? 'bg-white text-primary shadow-sm' : 'text-on-surface-variant hover:text-on-surface' }}">
             Account
         </button>
-        <button wire:click="$set('activeTab', 'system')"
+        {{-- <button wire:click="$set('activeTab', 'system')"
                 class="px-6 py-2.5 rounded-full text-sm font-bold transition-all {{ $activeTab === 'system' ? 'bg-white text-primary shadow-sm' : 'text-on-surface-variant hover:text-on-surface' }}">
             System
-        </button>
+        </button> --}}
     </div>
 
     <!-- Services Tab -->
@@ -123,7 +123,7 @@
     @endif
 
     <!-- System Tab -->
-    @if($activeTab === 'system')
+    {{-- @if($activeTab === 'system')
     <div class="bg-white rounded-xl p-8 shadow-sm max-w-lg space-y-6">
         <h3 class="text-xl font-bold text-on-surface">System Information</h3>
         <div class="space-y-3">
@@ -145,7 +145,7 @@
             </div>
         </div>
     </div>
-    @endif
+    @endif --}}
 
     <!-- Service Modal -->
     @if($showServiceModal)

@@ -117,14 +117,14 @@
                             <label class="text-xs font-bold text-on-surface-variant mb-1 block">Cycle Type</label>
                             <div class="grid grid-cols-2 gap-3">
                                 <label class="cursor-pointer">
-                                    <input type="radio" wire:model="cycle_type" value="wash" class="hidden peer"/>
+                                    <input type="radio" wire:model.live="cycle_type" value="wash" class="hidden peer"/>
                                     <div class="peer-checked:ring-2 peer-checked:ring-primary-container peer-checked:bg-primary-fixed/10 bg-surface-container-highest rounded-lg p-3 text-center hover:bg-surface-container-high transition-all">
                                         <span class="material-symbols-outlined text-2xl mb-1">local_laundry_service</span>
                                         <p class="text-xs font-bold">Wash</p>
                                     </div>
                                 </label>
                                 <label class="cursor-pointer">
-                                    <input type="radio" wire:model="cycle_type" value="dry" class="hidden peer"/>
+                                    <input type="radio" wire:model.live="cycle_type" value="dry" class="hidden peer"/>
                                     <div class="peer-checked:ring-2 peer-checked:ring-tertiary-container peer-checked:bg-tertiary-fixed/10 bg-surface-container-highest rounded-lg p-3 text-center hover:bg-surface-container-high transition-all">
                                         <span class="material-symbols-outlined text-2xl mb-1">dry_cleaning</span>
                                         <p class="text-xs font-bold">Dry</p>
@@ -140,6 +140,22 @@
                                    placeholder="e.g. 45"/>
                             @error('duration_minutes') <p class="text-error text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
+
+                        <div>
+                            <label class="text-xs font-bold text-on-surface-variant mb-1 block">Number of Loads</label>
+                            <input wire:model.live="number_of_loads" type="number" min="1"
+                                   class="w-full bg-surface-container-highest border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary-fixed text-sm"
+                                   placeholder="e.g. 1"/>
+                        </div>
+
+                        @if($this->assignMachine && $this->kilos)
+                        <div class="flex gap-6 text-xs bg-surface-container-highest rounded-lg p-3">
+                            <span class="text-on-surface-variant">kg per load: <strong class="text-on-surface">{{ number_format($this->perLoadKilos, 1) }} kg</strong></span>
+                            @if($this->duration_minutes)
+                            <span class="text-on-surface-variant">total duration: <strong class="text-on-surface">{{ $this->totalMachineDuration }} min</strong></span>
+                            @endif
+                        </div>
+                        @endif
                     </div>
                 </div>
 
@@ -275,7 +291,7 @@
                         <span class="font-semibold text-on-surface">
                             @php $machine = \App\Models\Machine::find($machine_id); @endphp
                             {{ $machine?->name ?? 'N/A' }}
-                            ({{ $duration_minutes ?? '—' }} min)
+                            ({{ $duration_minutes ?? '—' }} min &times; {{ $number_of_loads }} load(s))
                         </span>
                     </div>
                     @endif

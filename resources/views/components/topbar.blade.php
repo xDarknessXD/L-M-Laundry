@@ -1,7 +1,18 @@
 @php $user = auth()->user(); @endphp
 <header class="w-full h-16 sticky top-0 z-40 bg-white/80 backdrop-blur-xl flex justify-between items-center px-8 shadow-[0_40px_40px_rgba(0,10,30,0.04)]">
     <div class="flex items-center gap-8">
-        <span class="text-lg font-bold text-primary-container">J&M Laundry Lounge</span>
+        {{-- <span class="text-lg font-bold text-primary-container">J&M Laundry Lounge</span> --}}
+        <div x-data="{
+            now: new Date(),
+            init() {
+                setInterval(() => { this.now = new Date(); }, 1000);
+            }
+        }" class="hidden sm:flex items-center gap-2.5 text-sm text-on-surface-variant">
+            <span class="material-symbols-outlined text-[18px]">schedule</span>
+            <span x-text="now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })" class="font-medium"></span>
+            <span class="w-px h-4 bg-outline-variant/30"></span>
+            <span x-text="now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })" class="tabular-nums font-semibold text-primary"></span>
+        </div>
     </div>
     <div class="flex items-center gap-4">
         <div class="flex items-center gap-2">

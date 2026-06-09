@@ -9,7 +9,7 @@ class MachineLog extends Model
 {
     protected $fillable = [
         'machine_id', 'cycle_type', 'load_kilos', 'duration_minutes',
-        'start_time', 'end_time', 'staff_id', 'status',
+        'start_time', 'end_time', 'staff_id', 'status', 'transaction_id',
     ];
 
     protected $casts = [
@@ -26,6 +26,11 @@ class MachineLog extends Model
     public function staff()
     {
         return $this->belongsTo(User::class, 'staff_id');
+    }
+
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class);
     }
 
     public function getRemainingTimeAttribute()

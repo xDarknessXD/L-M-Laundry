@@ -170,28 +170,28 @@ class DatabaseSeeder extends Seeder
         Machine::create([
             'machine_code' => 'WSH-001',
             'name' => 'Washer 1',
-            'type' => 'Washer',
+            'type' => 'washer',
             'is_active' => true,
         ]);
 
         Machine::create([
             'machine_code' => 'WSH-002',
             'name' => 'Washer 2',
-            'type' => 'Washer',
+            'type' => 'washer',
             'is_active' => true,
         ]);
 
         Machine::create([
             'machine_code' => 'DRY-001',
             'name' => 'Dryer 1',
-            'type' => 'Dryer',
+            'type' => 'dryer',
             'is_active' => true,
         ]);
 
         Machine::create([
             'machine_code' => 'DRY-002',
             'name' => 'Dryer 2',
-            'type' => 'Dryer',
+            'type' => 'dryer',
             'is_active' => true,
         ]);
     }

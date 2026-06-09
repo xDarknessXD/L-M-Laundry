@@ -16,6 +16,14 @@
         <div class="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] rounded-full bg-tertiary/5 blur-[120px]"></div>
     </div>
 
+    <div x-data="{ now: new Date(), init() { setInterval(() => { this.now = new Date(); }, 1000) } }"
+         class="fixed top-4 right-4 z-50 flex items-center gap-2 px-3 py-1.5 bg-white/70 backdrop-blur-md rounded-full shadow-sm text-xs text-on-surface-variant">
+        <span class="material-symbols-outlined text-[14px]">schedule</span>
+        <span x-text="now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })" class="font-medium"></span>
+        <span class="w-px h-3 bg-outline-variant/30"></span>
+        <span x-text="now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })" class="tabular-nums font-semibold text-primary"></span>
+    </div>
+
     <div x-data x-init="$el.classList.add('opacity-0'); setTimeout(() => { $el.classList.remove('opacity-0'); $el.classList.add('transition-opacity', 'duration-500', 'opacity-100'); }, 50)">
         {{ $slot }}
     </div>
