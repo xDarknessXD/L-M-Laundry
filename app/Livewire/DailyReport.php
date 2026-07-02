@@ -60,6 +60,11 @@ class DailyReport extends Component
         }
     }
 
+    public function updatedSelectedDate()
+    {
+        $this->dispatch('refresh-charts', daily: $this->getDailyChartData(), monthly: $this->getMonthlyChartData());
+    }
+
     public function getDateRange(): array
     {
         $date = Carbon::parse($this->selectedDate);
@@ -78,6 +83,11 @@ class DailyReport extends Component
                 'end' => $date->copy()->endOfDay(),
             ],
         };
+    }
+
+    public function getSelectedDateObject(): Carbon
+    {
+        return Carbon::parse($this->selectedDate);
     }
 
     public function getPeriodLabel(): string
@@ -103,7 +113,7 @@ class DailyReport extends Component
         $range = $this->getDateRange();
 
         return match ($this->period) {
-            'weekly' => 'Week of ' . $range['start']->format('M d') . ' - ' . $range['end']->format('M d, Y'),
+            'weekly' => 'Week of '.$range['start']->format('M d').' - '.$range['end']->format('M d, Y'),
             'monthly' => $range['start']->format('F Y'),
             default => $range['start']->format('F d, Y'),
         };
@@ -112,6 +122,7 @@ class DailyReport extends Component
     private function baseQuery()
     {
         $range = $this->getDateRange();
+
         return Transaction::whereBetween('created_at', [$range['start'], $range['end']]);
     }
 
@@ -211,6 +222,7 @@ class DailyReport extends Component
             return $log->machine_id.'|'.$log->cycle_type;
         })->map(function ($group) {
             $first = $group->first();
+
             return [
                 'machine_name' => $first->machine?->name ?? 'Unknown',
                 'cycle_type' => $first->cycle_type,
@@ -239,8 +251,57 @@ class DailyReport extends Component
         return $this->getTotalTransactions() > 0;
     }
 
+    public function getDailyChartData()
+    {
+        $date = $this->getSelectedDateObject();
+        $transactions = Transaction::whereDate('created_at', $date)
+            ->select('created_at', 'total_amount')
+            ->get()
+            ->groupBy(fn ($t) => Carbon::parse($t->created_at)->hour);
+
+        $labels = [];
+        $counts = [];
+        $revenues = [];
+        for ($h = 8; $h <= 20; $h++) {
+            $group = $transactions->get($h, collect());
+            $labels[] = Carbon::createFromTime($h)->format('g A');
+            $counts[] = $group->count();
+            $revenues[] = $group->sum('total_amount');
+        }
+
+        return compact('labels', 'counts', 'revenues');
+    }
+
+    public function getMonthlyChartData()
+    {
+        $date = $this->getSelectedDateObject();
+        $start = $date->copy()->startOfMonth();
+        $end = $date->copy()->endOfMonth();
+        $daysInMonth = $start->daysInMonth;
+
+        $transactions = Transaction::whereBetween('created_at', [$start, $end])
+            ->select('created_at', 'total_amount')
+            ->get()
+            ->groupBy(fn ($t) => Carbon::parse($t->created_at)->day);
+
+        $labels = [];
+        $counts = [];
+        $revenues = [];
+        for ($d = 1; $d <= $daysInMonth; $d++) {
+            $group = $transactions->get($d, collect());
+            $labels[] = (string) $d;
+            $counts[] = $group->count();
+            $revenues[] = $group->sum('total_amount');
+        }
+
+        return compact('labels', 'counts', 'revenues');
+    }
+
     public function render()
     {
-        return view('livewire.daily-report');
+        return view('livewire.daily-report', [
+            'dailyChart' => $this->getDailyChartData(),
+            'monthlyChart' => $this->getMonthlyChartData(),
+        ]);
     }
 }

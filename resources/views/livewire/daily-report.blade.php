@@ -49,115 +49,183 @@
         </div>
     </div>
 
-    <!-- Summary Cards -->
-    <div class="grid grid-cols-4 gap-4">
-        <div class="bg-white rounded-xl p-6 shadow-sm">
-            <div class="flex items-center gap-3 mb-3">
-                <div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center">
-                    <span class="material-symbols-outlined text-primary">payments</span>
+    <!-- SCREEN VIEW: Full Report -->
+    <div id="printable-report" class="space-y-6 screen-only">
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-4 gap-4">
+            <div class="bg-white rounded-xl p-6 shadow-sm">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center">
+                        <span class="material-symbols-outlined text-primary">payments</span>
+                    </div>
+                    <span class="text-sm font-medium text-on-surface-variant">Total Revenue</span>
                 </div>
-                <span class="text-sm font-medium text-on-surface-variant">Total Revenue</span>
+                <p class="text-2xl font-black text-primary">
+                    @if($this->hasTransactions())
+                        ₱{{ number_format($this->getTotalRevenue(), 2) }}
+                    @else
+                        —
+                    @endif
+                </p>
             </div>
-            <p class="text-2xl font-black text-primary">
-                @if($this->hasTransactions())
-                    ₱{{ number_format($this->getTotalRevenue(), 2) }}
-                @else
-                    —
-                @endif
-            </p>
-        </div>
-        <div class="bg-white rounded-xl p-6 shadow-sm">
-            <div class="flex items-center gap-3 mb-3">
-                <div class="w-10 h-10 rounded-full bg-tertiary-container flex items-center justify-center">
-                    <span class="material-symbols-outlined text-tertiary">receipt_long</span>
+            <div class="bg-white rounded-xl p-6 shadow-sm">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 rounded-full bg-tertiary-container flex items-center justify-center">
+                        <span class="material-symbols-outlined text-tertiary">receipt_long</span>
+                    </div>
+                    <span class="text-sm font-medium text-on-surface-variant">Total Transactions</span>
                 </div>
-                <span class="text-sm font-medium text-on-surface-variant">Total Transactions</span>
+                <p class="text-2xl font-black text-tertiary">
+                    @if($this->hasTransactions())
+                        {{ $this->getTotalTransactions() }}
+                    @else
+                        —
+                    @endif
+                </p>
             </div>
-            <p class="text-2xl font-black text-tertiary">
-                @if($this->hasTransactions())
-                    {{ $this->getTotalTransactions() }}
-                @else
-                    —
-                @endif
-            </p>
-        </div>
-        <div class="bg-white rounded-xl p-6 shadow-sm">
-            <div class="flex items-center gap-3 mb-3">
-                <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center">
-                    <span class="material-symbols-outlined text-secondary">people</span>
+            <div class="bg-white rounded-xl p-6 shadow-sm">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center">
+                        <span class="material-symbols-outlined text-secondary">people</span>
+                    </div>
+                    <span class="text-sm font-medium text-on-surface-variant">Total Customers</span>
                 </div>
-                <span class="text-sm font-medium text-on-surface-variant">Total Customers</span>
+                <p class="text-2xl font-black text-secondary">
+                    @if($this->hasTransactions())
+                        {{ $this->getUniqueCustomers() }}
+                    @else
+                        —
+                    @endif
+                </p>
             </div>
-            <p class="text-2xl font-black text-secondary">
-                @if($this->hasTransactions())
-                    {{ $this->getUniqueCustomers() }}
-                @else
-                    —
-                @endif
-            </p>
-        </div>
-        <div class="bg-white rounded-xl p-6 shadow-sm">
-            <div class="flex items-center gap-3 mb-3">
-                <div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center">
-                    <span class="material-symbols-outlined text-on-primary-fixed">local_laundry_service</span>
+            <div class="bg-white rounded-xl p-6 shadow-sm">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center">
+                        <span class="material-symbols-outlined text-on-primary-fixed">local_laundry_service</span>
+                    </div>
+                    <span class="text-sm font-medium text-on-surface-variant">Services Rendered</span>
                 </div>
-                <span class="text-sm font-medium text-on-surface-variant">Services Rendered</span>
-            </div>
-            <p class="text-2xl font-black text-on-primary-fixed">
-                @if($this->hasTransactions())
-                    {{ $this->getTotalTransactions() }}
-                @else
-                    —
-                @endif
-            </p>
-        </div>
-    </div>
-
-    @if($this->hasTransactions())
-        <!-- Service Performance -->
-        <div class="bg-white rounded-xl p-6 shadow-sm">
-            <h3 class="text-lg font-bold text-on-surface mb-4 flex items-center gap-2">
-                <span class="material-symbols-outlined text-primary">analytics</span>
-                Service Performance
-            </h3>
-            <div class="grid grid-cols-4 gap-4">
-                @foreach($this->getServiceBreakdown() as $type => $data)
-                <div class="p-4 bg-surface-container-highest rounded-lg">
-                    <p class="text-xs font-bold text-on-surface-variant uppercase mb-1">{{ $data['name'] }}</p>
-                    <p class="text-2xl font-black text-on-surface">{{ $data['count'] }}</p>
-                    <p class="text-xs text-on-surface-variant">{{ $data['count'] == 1 ? 'transaction' : 'transactions' }}</p>
-                </div>
-                @endforeach
+                <p class="text-2xl font-black text-on-primary-fixed">
+                    @if($this->hasTransactions())
+                        {{ $this->getTotalTransactions() }}
+                    @else
+                        —
+                    @endif
+                </p>
             </div>
         </div>
 
-        <!-- Add-ons & Supplies by Category -->
-        @if(count($this->getAddonsByCategory()) > 0)
-        <div class="bg-white rounded-xl p-6 shadow-sm">
-            <h3 class="text-lg font-bold text-on-surface mb-4 flex items-center gap-2">
-                <span class="material-symbols-outlined text-tertiary">inventory_2</span>
-                Add-ons & Supplies
-            </h3>
-            <table class="w-full">
-                <thead>
-                    <tr class="border-b border-surface-container-high">
-                        <th class="text-left px-4 py-3 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">Category</th>
-                        <th class="text-center px-4 py-3 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">Quantity Used</th>
-                        <th class="text-right px-4 py-3 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($this->getAddonsByCategory() as $category)
-                    <tr class="border-b border-surface-container-highest/50">
-                        <td class="px-4 py-3 text-sm font-medium text-on-surface">{{ $category['name'] }}</td>
-                        <td class="px-4 py-3 text-center text-sm font-bold text-on-surface">{{ $category['quantity'] }}</td>
-                        <td class="px-4 py-3 text-right text-sm font-bold text-on-surface">₱{{ number_format($category['total'], 2) }}</td>
-                    </tr>
+        <!-- Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div class="bg-white rounded-xl p-6 shadow-sm" wire:ignore
+                x-data="{
+                    chart: null,
+                    labels: {{ Js::from($dailyChart['labels']) }},
+                    values: {{ Js::from($dailyChart['revenues']) }},
+                    init() {
+                        this.chart = new Chart(this.$refs.canvas, {
+                            type: 'bar',
+                            data: {
+                                labels: this.labels,
+                                datasets: [{ data: this.values, backgroundColor: '#000a1e', borderRadius: 8, barThickness: 16 }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: { legend: { display: false } },
+                                scales: {
+                                    y: { beginAtZero: true, grid: { color: '#e3e2e6' }, ticks: { callback: v => '₱' + v } },
+                                    x: { grid: { display: false } }
+                                }
+                            }
+                        });
+                        window.__charts = window.__charts || {};
+                        window.__charts.dailyRevenue = this.chart;
+                    }
+                }">
+                <h3 class="text-lg font-bold text-on-surface mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">bar_chart</span>
+                    Hourly Revenue — {{ \Carbon\Carbon::parse($selectedDate)->format('M d, Y') }}
+                </h3>
+                <canvas x-ref="canvas" height="200" class="w-full"></canvas>
+            </div>
+
+            <div class="bg-white rounded-xl p-6 shadow-sm" wire:ignore
+                x-data="{
+                    chart: null,
+                    labels: {{ Js::from($monthlyChart['labels']) }},
+                    values: {{ Js::from($monthlyChart['counts']) }},
+                    init() {
+                        this.chart = new Chart(this.$refs.canvas, {
+                            type: 'bar',
+                            data: {
+                                labels: this.labels,
+                                datasets: [{ data: this.values, backgroundColor: '#3b6751', borderRadius: 6, barThickness: 10 }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: { legend: { display: false } },
+                                scales: {
+                                    y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: '#e3e2e6' } },
+                                    x: { grid: { display: false } }
+                                }
+                            }
+                        });
+                        window.__charts = window.__charts || {};
+                        window.__charts.monthlyTrend = this.chart;
+                    }
+                }">
+                <h3 class="text-lg font-bold text-on-surface mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-tertiary">trending_up</span>
+                    Monthly Trend — {{ \Carbon\Carbon::parse($selectedDate)->format('F Y') }}
+                </h3>
+                <canvas x-ref="canvas" height="200" class="w-full"></canvas>
+            </div>
+        </div>
+
+        @if($this->hasTransactions())
+            <!-- Service Performance -->
+            <div class="bg-white rounded-xl p-6 shadow-sm">
+                <h3 class="text-lg font-bold text-on-surface mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">analytics</span>
+                    Service Performance
+                </h3>
+                <div class="grid grid-cols-4 gap-4">
+                    @foreach($this->getServiceBreakdown() as $type => $data)
+                    <div class="p-4 bg-surface-container-highest rounded-lg">
+                        <p class="text-xs font-bold text-on-surface-variant uppercase mb-1">{{ $data['name'] }}</p>
+                        <p class="text-2xl font-black text-on-surface">{{ $data['count'] }}</p>
+                        <p class="text-xs text-on-surface-variant">{{ $data['count'] == 1 ? 'transaction' : 'transactions' }}</p>
+                    </div>
                     @endforeach
-                </tbody>
-            </table>
-        </div>
-        @endif
+                </div>
+            </div>
+
+            @if(count($this->getAddonsByCategory()) > 0)
+            <div class="bg-white rounded-xl p-6 shadow-sm">
+                <h3 class="text-lg font-bold text-on-surface mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-tertiary">inventory_2</span>
+                    Add-ons & Supplies
+                </h3>
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-surface-container-high">
+                            <th class="text-left px-4 py-3 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">Category</th>
+                            <th class="text-center px-4 py-3 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">Quantity Used</th>
+                            <th class="text-right px-4 py-3 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($this->getAddonsByCategory() as $category)
+                        <tr class="border-b border-surface-container-highest/50">
+                            <td class="px-4 py-3 text-sm font-medium text-on-surface">{{ $category['name'] }}</td>
+                            <td class="px-4 py-3 text-center text-sm font-bold text-on-surface">{{ $category['quantity'] }}</td>
+                            <td class="px-4 py-3 text-right text-sm font-bold text-on-surface">₱{{ number_format($category['total'], 2) }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            @endif
 
         <!-- Payment Summary -->
         <div class="bg-white rounded-xl p-6 shadow-sm">

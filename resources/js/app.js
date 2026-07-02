@@ -1,1 +1,3 @@
-// Alpine is loaded automatically by Livewire 3
+import Chart from 'chart.js/auto';
+
+window.Chart = Chart;

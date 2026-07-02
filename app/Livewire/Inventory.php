@@ -2,9 +2,9 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Models\InventoryCategory;
 use App\Models\InventoryItem;
+use Livewire\Component;
 
 class Inventory extends Component
 {
@@ -12,18 +12,28 @@ class Inventory extends Component
 
     // Add/Edit Item
     public bool $showItemModal = false;
+
     public bool $editingItem = false;
+
     public ?int $editItemId = null;
+
     public $categoryId = '';
+
     public string $itemName = '';
+
     public string $itemBrand = '';
+
     public string $itemUnit = 'pcs';
+
     public float $itemPrice = 0;
+
     public int $itemStock = 0;
 
     // Add Category
     public bool $showCategoryModal = false;
+
     public string $newCategoryName = '';
+
     public string $newCategoryIcon = '📦';
 
     public function openAddItem($categoryId = null)
@@ -36,7 +46,9 @@ class Inventory extends Component
     public function openEditItem($itemId)
     {
         $item = InventoryItem::find($itemId);
-        if (!$item) return;
+        if (! $item) {
+            return;
+        }
 
         $this->editingItem = true;
         $this->editItemId = $item->id;
@@ -88,6 +100,22 @@ class Inventory extends Component
     {
         InventoryItem::destroy($itemId);
         $this->dispatch('toast', message: 'Item deleted.', type: 'success');
+    }
+
+    public function deleteCategory($categoryId)
+    {
+        $category = InventoryCategory::find($categoryId);
+        if (! $category) {
+            return;
+        }
+
+        $itemCount = $category->items()->count();
+        $category->delete();
+
+        $msg = $itemCount > 0
+            ? "Category '{$category->name}' and {$itemCount} item(s) deleted."
+            : "Category '{$category->name}' deleted.";
+        $this->dispatch('toast', message: $msg, type: 'success');
     }
 
     public function saveCategory()

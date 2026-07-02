@@ -30,6 +30,7 @@
             <div class="space-y-2" x-data="{ show: false }">
                 <div class="flex justify-between items-center">
                     <label class="block text-xs font-bold uppercase tracking-widest text-secondary" for="password">Password</label>
+                    <a href="{{ route('password.request') }}" class="text-xs font-medium text-primary hover:underline">Forgot password?</a>
                 </div>
                 <div class="relative group">
                     <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant group-focus-within:text-primary transition-colors">lock</span>

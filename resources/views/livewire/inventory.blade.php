@@ -29,7 +29,7 @@
     <div class="space-y-6">
         @forelse($categories as $category)
         <div class="bg-white rounded-xl shadow-sm overflow-hidden" x-data="{ open: true }">
-            <button @click="open = !open" class="w-full flex items-center justify-between px-6 py-5 hover:bg-surface-container-highest/30 transition-colors">
+            <div role="button" tabindex="0" @click="open = !open" @keydown.enter="open = !open" @keydown.space.prevent="open = !open" class="w-full flex items-center justify-between px-6 py-5 hover:bg-surface-container-highest/30 transition-colors cursor-pointer">
                 <div class="flex items-center gap-3">
                     <span class="text-2xl">{{ $category->icon }}</span>
                     <div class="text-left">
@@ -37,8 +37,15 @@
                         <p class="text-xs text-on-surface-variant">{{ $category->items->count() }} item(s)</p>
                     </div>
                 </div>
-                <span class="material-symbols-outlined transition-transform" :class="{ 'rotate-180': open }">expand_more</span>
-            </button>
+                <div class="flex items-center gap-2">
+                    @if($isAdmin)
+                    <button @click.stop x-on:click.prevent="$dispatch('confirm-action', { message: 'Delete category &quot;{{ addslashes($category->name) }}&quot; and all its items?', method: 'deleteCategory', params: [{{ $category->id }}] })" class="p-1.5 text-error hover:bg-error/10 rounded-lg transition-colors">
+                        <span class="material-symbols-outlined text-lg">delete</span>
+                    </button>
+                    @endif
+                    <span class="material-symbols-outlined transition-transform" :class="{ 'rotate-180': open }">expand_more</span>
+                </div>
+            </div>
 
             <div x-show="open" x-transition:enter="transition ease-out duration-200"
                  x-transition:enter-start="opacity-0 -translate-y-2"

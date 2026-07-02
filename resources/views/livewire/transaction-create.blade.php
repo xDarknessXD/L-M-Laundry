@@ -330,6 +330,11 @@
                     </div>
                     @endif
                 </div>
+
+                <div class="border-t border-dashed border-outline-variant/30 pt-3 text-center">
+                    <p class="text-[9px] font-bold text-error uppercase tracking-wide">Important</p>
+                    <p class="text-[9px] text-on-surface-variant leading-tight">Please keep this receipt. It is required for claiming your laundry.</p>
+                </div>
             </div>
 
             <button x-on:click="window.print()" class="no-print w-full py-3 border border-outline-variant/30 rounded-full text-sm font-bold text-primary hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2">
