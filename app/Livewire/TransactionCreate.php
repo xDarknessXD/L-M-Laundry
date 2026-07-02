@@ -2,46 +2,64 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
-use Livewire\Attributes\Layout;
+use App\Models\Customer;
+use App\Models\InventoryItem;
 use App\Models\Machine;
 use App\Models\MachineLog;
 use App\Models\Service;
 use App\Models\Transaction;
-use App\Models\InventoryItem;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class TransactionCreate extends Component
 {
     // Customer
+    public ?int $customer_id = null;
+
+    public bool $newCustomer = true;
+
     public string $customer_name = '';
+
     public string $customer_phone = '';
 
     // Service
     public $service_id = '';
+
     public string $material_type = 'light';
+
     public $kilos = 5;
 
     // Addons
     public array $addons = [];
+
     public bool $showAddonModal = false;
+
     public $selectedAddonId = '';
+
     public $addonQty = 1;
 
     // Computed values
     public $subtotal = 0;
+
     public $addonsTotal = 0;
+
     public $totalAmount = 0;
 
     // Payment
     public $payment_type = 'unpaid';
+
     public $amount_paid = 0;
 
     // Machine Assignment
     public bool $assignMachine = false;
+
     public $machine_id = '';
+
     public string $cycle_type = 'wash';
+
     public $duration_minutes = null;
+
     public int $number_of_loads = 1;
 
     protected function rules()
@@ -50,6 +68,28 @@ class TransactionCreate extends Component
             'customer_name' => 'required|min:2',
             'service_id' => 'required|exists:services,id',
         ];
+    }
+
+    public function updatedCustomerId($value)
+    {
+        if ($value) {
+            $customer = Customer::find($value);
+            if ($customer) {
+                $this->customer_name = $customer->name;
+                $this->customer_phone = $customer->phone ?? '';
+                $this->newCustomer = false;
+            }
+        }
+    }
+
+    public function toggleNewCustomer()
+    {
+        $this->newCustomer = ! $this->newCustomer;
+        if ($this->newCustomer) {
+            $this->customer_id = null;
+            $this->customer_name = '';
+            $this->customer_phone = '';
+        }
     }
 
     public function updatedServiceId()
@@ -76,7 +116,9 @@ class TransactionCreate extends Component
 
     public function updatedMachineId()
     {
-        if (! $this->machine_id) return;
+        if (! $this->machine_id) {
+            return;
+        }
 
         $machine = Machine::find($this->machine_id);
         if ($machine) {
@@ -87,7 +129,9 @@ class TransactionCreate extends Component
 
     protected function prefillDuration()
     {
-        if (! $this->service_id || ! $this->machine_id) return;
+        if (! $this->service_id || ! $this->machine_id) {
+            return;
+        }
 
         $service = Service::find($this->service_id);
         if ($service) {
@@ -99,13 +143,19 @@ class TransactionCreate extends Component
 
     public function getPerLoadKilosProperty()
     {
-        if (! $this->kilos || $this->number_of_loads < 1) return 0;
+        if (! $this->kilos || $this->number_of_loads < 1) {
+            return 0;
+        }
+
         return (float) $this->kilos / $this->number_of_loads;
     }
 
     public function getTotalMachineDurationProperty()
     {
-        if (! $this->duration_minutes) return 0;
+        if (! $this->duration_minutes) {
+            return 0;
+        }
+
         return (int) $this->duration_minutes * $this->number_of_loads;
     }
 
@@ -134,13 +184,14 @@ class TransactionCreate extends Component
     public function calculateTotals()
     {
         $service = Service::find($this->service_id);
-        if (!$service) {
+        if (! $service) {
             $this->subtotal = 0;
             $this->totalAmount = 0;
+
             return;
         }
 
-        $effectiveKilos = max((float)$this->kilos, $service->minimum_kilos);
+        $effectiveKilos = max((float) $this->kilos, $service->minimum_kilos);
         $this->subtotal = $effectiveKilos * $service->price_per_kilo;
 
         $this->addonsTotal = collect($this->addons)->sum(function ($a) {
@@ -148,7 +199,7 @@ class TransactionCreate extends Component
         });
 
         $this->totalAmount = $this->subtotal + $this->addonsTotal;
-        
+
         // Re-sync automatic payment amounts when invoice changes
         if ($this->payment_type === 'full') {
             $this->amount_paid = $this->totalAmount;
@@ -159,10 +210,14 @@ class TransactionCreate extends Component
 
     public function addAddon()
     {
-        if (!$this->selectedAddonId) return;
+        if (! $this->selectedAddonId) {
+            return;
+        }
 
         $item = InventoryItem::find($this->selectedAddonId);
-        if (!$item) return;
+        if (! $item) {
+            return;
+        }
 
         // Check stock availability
         $currentCartQuantity = 0;
@@ -175,6 +230,7 @@ class TransactionCreate extends Component
 
         if (($currentCartQuantity + $this->addonQty) > $item->stock_quantity) {
             $this->addError('addonQty', "Only {$item->stock_quantity} left in stock.");
+
             return;
         }
 
@@ -186,6 +242,7 @@ class TransactionCreate extends Component
                 $this->showAddonModal = false;
                 $this->selectedAddonId = '';
                 $this->addonQty = 1;
+
                 return;
             }
         }
@@ -214,13 +271,14 @@ class TransactionCreate extends Component
     {
         $this->validate();
 
-        if ((float)$this->kilos < 1) {
+        if ((float) $this->kilos < 1) {
             $this->addError('kilos', 'Weight must be at least 1kg.');
+
             return;
         }
 
         $service = Service::findOrFail($this->service_id);
-        $effectiveKilos = max((float)$this->kilos, $service->minimum_kilos);
+        $effectiveKilos = max((float) $this->kilos, $service->minimum_kilos);
         $minutesPerKilo = $this->material_type === 'heavy' ? 10 : ($this->material_type === 'jeans' ? 8 : 6);
 
         // Calculate and validate Payment
@@ -229,11 +287,13 @@ class TransactionCreate extends Component
 
         if ($this->payment_type === 'partial') {
             if ($amountPaid < $minimumPartial) {
-                $this->addError('amount_paid', "Minimum down payment is 50% (₱" . number_format($minimumPartial, 2) . ").");
+                $this->addError('amount_paid', 'Minimum down payment is 50% (₱'.number_format($minimumPartial, 2).').');
+
                 return;
             }
             if ($amountPaid > $this->totalAmount) {
-                $this->addError('amount_paid', "Cannot pay more than the total balance here.");
+                $this->addError('amount_paid', 'Cannot pay more than the total balance here.');
+
                 return;
             }
         } elseif ($this->payment_type === 'full') {
@@ -254,6 +314,7 @@ class TransactionCreate extends Component
             'order_number' => Transaction::generateOrderNumber(),
             'customer_name' => $this->customer_name,
             'customer_phone' => $this->customer_phone,
+            'customer_id' => $this->customer_id,
             'service_id' => $this->service_id,
             'material_type' => $this->material_type,
             'kilos' => $effectiveKilos,
@@ -281,7 +342,7 @@ class TransactionCreate extends Component
             $item = InventoryItem::find($addon['item_id']);
             if ($item) {
                 $item->stock_quantity -= $addon['quantity'];
-                
+
                 // Set status to out_of_stock if empty
                 if ($item->stock_quantity <= 0) {
                     $item->stock_quantity = 0;
@@ -323,6 +384,7 @@ class TransactionCreate extends Component
         }
 
         $this->dispatch('toast', message: "Transaction {$transaction->order_number} created!", type: 'success');
+
         return redirect()->route('transactions');
     }
 
@@ -337,8 +399,9 @@ class TransactionCreate extends Component
         $machines = Machine::where('is_active', true)
             ->where('type', $machineType)
             ->get();
+        $customers = Customer::orderBy('name')->get();
 
-        return view('livewire.transaction-create', compact('services', 'selectedService', 'inventoryItems', 'machines'))
+        return view('livewire.transaction-create', compact('services', 'selectedService', 'inventoryItems', 'machines', 'customers'))
             ->layout('layouts.app');
     }
 }

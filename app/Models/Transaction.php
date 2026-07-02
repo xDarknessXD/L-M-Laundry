@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Transaction extends Model
 {
     protected $fillable = [
-        'order_number', 'customer_name', 'customer_phone', 'service_id',
+        'order_number', 'customer_name', 'customer_phone', 'customer_id', 'service_id',
         'material_type', 'kilos', 'number_of_loads', 'minutes_per_kilo', 'subtotal',
         'addons_total', 'total_amount', 'amount_paid', 'balance',
         'payment_status', 'order_status', 'created_by',
@@ -45,6 +45,11 @@ class Transaction extends Model
     public function machine()
     {
         return $this->belongsTo(Machine::class);
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
     }
 
     public function machineLogs()
@@ -89,6 +94,6 @@ class Transaction extends Model
             ? (int) substr($lastOrder->order_number, -4) + 1
             : 1;
 
-        return 'JML-' . $date . '-' . str_pad($sequence, 4, '0', STR_PAD_LEFT);
+        return 'JML-'.$date.'-'.str_pad($sequence, 4, '0', STR_PAD_LEFT);
     }
 }

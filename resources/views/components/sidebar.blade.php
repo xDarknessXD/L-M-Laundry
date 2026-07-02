@@ -8,6 +8,7 @@
         ['name' => 'New Transaction', 'route' => 'transactions.create', 'icon' => 'add_circle'],
         ['name' => 'Transactions', 'route' => 'transactions', 'icon' => 'receipt_long'],
         ['name' => 'Inventory', 'route' => 'inventory', 'icon' => 'inventory_2'],
+        ['name' => 'Customers', 'route' => 'customers', 'icon' => 'group'],
         ['name' => 'Machine Logs', 'route' => 'machine-logs', 'icon' => 'local_laundry_service'],
         ['name' => 'Daily Report', 'route' => 'daily-report', 'icon' => 'analytics', 'admin' => true],
         ['name' => 'User Management', 'route' => 'users', 'icon' => 'group', 'admin' => true],

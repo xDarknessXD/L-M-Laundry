@@ -16,22 +16,42 @@
             <form wire:submit="submit" class="space-y-8">
                 <!-- Customer Info -->
                 <div class="bg-white rounded-xl p-6 shadow-sm space-y-4">
-                    <h3 class="text-xs font-black uppercase tracking-widest text-on-surface-variant flex items-center gap-2">
-                        <span class="material-symbols-outlined text-sm">person</span> Customer Information
-                    </h3>
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xs font-black uppercase tracking-widest text-on-surface-variant flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">person</span> Customer Information
+                        </h3>
+                        <button type="button" wire:click="toggleNewCustomer"
+                                class="text-xs font-bold text-primary hover:underline">
+                            {{ $newCustomer ? 'Select existing' : 'Add new customer' }}
+                        </button>
+                    </div>
+
+                    @if(!$newCustomer)
+                    <div>
+                        <label class="text-xs font-bold text-on-surface-variant mb-1 block">Select Customer</label>
+                        <select wire:model.live="customer_id"
+                                class="w-full bg-surface-container-highest border-none rounded-lg py-3 px-4 text-sm focus:ring-2 focus:ring-primary-fixed">
+                            <option value="">— Choose a customer —</option>
+                            @foreach($customers as $c)
+                                <option value="{{ $c->id }}">{{ $c->name }} {{ $c->phone ? '· ' . $c->phone : '' }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endif
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="text-xs font-bold text-on-surface-variant mb-1 block">Full Name *</label>
                             <input wire:model="customer_name" type="text"
                                    class="w-full bg-surface-container-highest border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary-fixed text-sm"
-                                   placeholder="Juan Dela Cruz"/>
+                                   placeholder="Juan Dela Cruz" {{ !$newCustomer ? 'readonly' : '' }}/>
                             @error('customer_name') <p class="text-error text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label class="text-xs font-bold text-on-surface-variant mb-1 block">Phone Number</label>
                             <input wire:model="customer_phone" type="tel"
                                    class="w-full bg-surface-container-highest border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary-fixed text-sm"
-                                   placeholder="+63 900 000 0000"/>
+                                   placeholder="+63 900 000 0000" {{ !$newCustomer ? 'readonly' : '' }}/>
                         </div>
                     </div>
                 </div>

@@ -27,6 +27,9 @@
                 <p class="text-on-surface-variant font-medium mt-1">{{ $this->getPeriodDescription() }}</p>
             </div>
             <div class="flex items-center gap-3">
+                <button x-on:click="window.print()" class="px-4 py-2 bg-surface-container-highest text-primary font-bold rounded-full text-sm hover:opacity-90 transition-all flex items-center gap-2 no-print">
+                    <span class="material-symbols-outlined text-lg">print</span> Print Report
+                </button>
                 <button wire:click="previousDay" class="p-3 hover:bg-surface-container-high rounded-full transition-colors">
                     <span class="material-symbols-outlined">chevron_left</span>
                 </button>
@@ -362,4 +365,136 @@
             </button>
         </div>
     @endif
+</div>
+
+<!-- PRINT LAYOUT -->
+<div id="printable-report-print" class="space-y-5 hidden print:block">
+    <div class="mb-4">
+        <h2 class="text-xl font-black">{{ $this->getPeriodLabel() }} — {{ $this->getDateRangeLabel() }}</h2>
+        <p class="text-sm text-gray-500">Printed on {{ now()->format('F d, Y h:i A') }}</p>
+    </div>
+
+    <div class="grid grid-cols-4 gap-3">
+        <div class="border rounded p-3 text-center">
+            <p class="text-xs text-gray-500 uppercase">Revenue</p>
+            <p class="text-base font-bold">₱{{ number_format($this->getTotalRevenue(), 2) }}</p>
+        </div>
+        <div class="border rounded p-3 text-center">
+            <p class="text-xs text-gray-500 uppercase">Transactions</p>
+            <p class="text-base font-bold">{{ $this->getTotalTransactions() }}</p>
+        </div>
+        <div class="border rounded p-3 text-center">
+            <p class="text-xs text-gray-500 uppercase">Customers</p>
+            <p class="text-base font-bold">{{ $this->getUniqueCustomers() }}</p>
+        </div>
+        <div class="border rounded p-3 text-center">
+            <p class="text-xs text-gray-500 uppercase">Cash Received</p>
+            <p class="text-base font-bold">₱{{ number_format($this->getCashPayments(), 2) }}</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+        <div class="border rounded p-4" wire:ignore
+            x-data="{
+                chart: null,
+                labels: {{ Js::from($dailyChart['labels']) }},
+                values: {{ Js::from($dailyChart['revenues']) }},
+                init() {
+                    this.chart = new Chart(this.$refs.canvas, {
+                        type: 'bar',
+                        data: { labels: this.labels, datasets: [{ data: this.values, backgroundColor: '#000a1e', borderRadius: 6, barThickness: 14 }] },
+                        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#eee' } }, x: { grid: { display: false } } } }
+                    });
+                    window.__charts = window.__charts || {};
+                    window.__charts.printDaily = this.chart;
+                }
+            }">
+            <h3 class="font-bold text-sm mb-3">Hourly Revenue</h3>
+            <canvas x-ref="canvas" height="180" class="w-full"></canvas>
+        </div>
+
+        <div class="border rounded p-4" wire:ignore
+            x-data="{
+                chart: null,
+                labels: {{ Js::from($monthlyChart['labels']) }},
+                values: {{ Js::from($monthlyChart['counts']) }},
+                init() {
+                    this.chart = new Chart(this.$refs.canvas, {
+                        type: 'bar',
+                        data: { labels: this.labels, datasets: [{ data: this.values, backgroundColor: '#3b6751', borderRadius: 4, barThickness: 8 }] },
+                        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: '#eee' } }, x: { grid: { display: false } } } }
+                    });
+                    window.__charts = window.__charts || {};
+                    window.__charts.printTrend = this.chart;
+                }
+            }">
+            <h3 class="font-bold text-sm mb-3">Transaction Trend</h3>
+            <canvas x-ref="canvas" height="180" class="w-full"></canvas>
+        </div>
+    </div>
+
+    @php $printMachineStats = $this->getMachineStats(); @endphp
+    @if($printMachineStats['total_loads'] > 0)
+    <div class="border rounded p-4">
+        <h3 class="font-bold text-sm mb-3">Machine Activity</h3>
+        <table class="w-full text-sm">
+            <thead><tr class="border-b"><th class="text-left py-1 text-xs">Cycle</th><th class="text-center py-1 text-xs">Loads</th><th class="text-center py-1 text-xs">Kilos</th><th class="text-right py-1 text-xs">Minutes</th></tr></thead>
+            <tbody>
+                <tr class="border-b border-gray-100"><td class="py-1">Wash</td><td class="text-center py-1">{{ $printMachineStats['wash_loads'] }}</td><td class="text-center py-1">{{ number_format($printMachineStats['wash_kilos'], 1) }} kg</td><td class="text-right py-1">{{ number_format($printMachineStats['wash_minutes']) }} min</td></tr>
+                <tr class="border-b border-gray-100"><td class="py-1">Dry</td><td class="text-center py-1">{{ $printMachineStats['dry_loads'] }}</td><td class="text-center py-1">{{ number_format($printMachineStats['dry_kilos'], 1) }} kg</td><td class="text-right py-1">{{ number_format($printMachineStats['dry_minutes']) }} min</td></tr>
+                <tr><td class="py-1 font-bold">Total</td><td class="text-center py-1 font-bold">{{ $printMachineStats['total_loads'] }}</td><td class="text-center py-1 font-bold">{{ number_format($printMachineStats['total_kilos'], 1) }} kg</td><td class="text-right py-1 font-bold">{{ number_format($printMachineStats['total_minutes']) }} min</td></tr>
+            </tbody>
+        </table>
+    </div>
+    @endif
+
+    @if($this->hasTransactions())
+    <div class="border rounded p-4">
+        <h3 class="font-bold text-sm mb-3">Latest Transactions</h3>
+        <table class="w-full text-sm">
+            <thead><tr class="border-b"><th class="text-left py-1 text-xs">Order #</th><th class="text-left py-1 text-xs">Customer</th><th class="text-left py-1 text-xs">Service</th><th class="text-center py-1 text-xs">Kilos</th><th class="text-right py-1 text-xs">Amount</th><th class="text-center py-1 text-xs">Status</th></tr></thead>
+            <tbody>
+                @foreach($this->getLatestTransactions() as $transaction)
+                <tr class="border-b border-gray-100">
+                    <td class="py-1 text-[11px] font-mono">{{ $transaction->order_number }}</td>
+                    <td class="py-1 text-[11px]">{{ $transaction->customer_name }}</td>
+                    <td class="py-1 text-[11px]">{{ $transaction->service->name ?? 'N/A' }}</td>
+                    <td class="py-1 text-[11px] text-center">{{ number_format($transaction->kilos, 1) }}</td>
+                    <td class="py-1 text-[11px] text-right font-bold">₱{{ number_format($transaction->total_amount, 2) }}</td>
+                    <td class="py-1 text-[11px] text-center font-bold capitalize">{{ $transaction->payment_status }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    @endif
+</div>
+
+<script>
+document.addEventListener('livewire:initialized', () => {
+    Livewire.on('refresh-charts', (event) => {
+        const updateChart = (chart, labels, values) => {
+            if (!chart) return;
+            chart.data.labels = labels;
+            chart.data.datasets[0].data = values;
+            chart.update();
+        };
+        if (window.__charts) {
+            updateChart(window.__charts.dailyRevenue, event.daily.labels, event.daily.revenues);
+            updateChart(window.__charts.monthlyTrend, event.monthly.labels, event.monthly.counts);
+            updateChart(window.__charts.printDaily, event.daily.labels, event.daily.revenues);
+            updateChart(window.__charts.printTrend, event.monthly.labels, event.monthly.counts);
+        }
+    });
+});
+
+window.addEventListener('beforeprint', () => {
+    if (window.__charts) {
+        window.__charts.printDaily?.resize();
+        window.__charts.printTrend?.resize();
+        window.__charts.dailyRevenue?.resize();
+        window.__charts.monthlyTrend?.resize();
+    }
+});
+</script>
 </div>

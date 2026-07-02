@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Auth\Login;
+use App\Livewire\Customers;
 use App\Livewire\DailyReport;
 use App\Livewire\Dashboard;
 use App\Livewire\Inventory;
@@ -48,6 +49,7 @@ Route::middleware(['auth', 'check.status'])->group(function () {
     Route::get('/transactions/create', TransactionCreate::class)->name('transactions.create');
     Route::get('/transactions/{transaction}/edit', TransactionEdit::class)->name('transactions.edit');
     Route::get('/inventory', Inventory::class)->name('inventory');
+    Route::get('/customers', Customers::class)->name('customers');
     Route::get('/machine-logs', MachineLogs::class)->name('machine-logs');
 
     Route::get('/', function () {
